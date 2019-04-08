@@ -52,7 +52,7 @@ std::unique_ptr<char> getUniqueDataFromFile(const std::string& filename) {
 	//定位到文件的末尾
 	in.seekg(0, std::ios::end);
 	//获取总长度
-	int size = in.tellg();
+	int size = (int)in.tellg();
 
 	char* buffer = new char[size + 1];
 	memset(buffer, '\0', size + 1);
