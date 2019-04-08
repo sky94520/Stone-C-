@@ -10,6 +10,7 @@
 #include "Token.h"
 
 using namespace std;
+USING_NS_STONE;
 
 
 std::unique_ptr<char> getUniqueDataFromFile(const std::string& filename);

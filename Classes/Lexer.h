@@ -6,6 +6,9 @@
 #include <vector>
 #include <sstream>
 
+#include "StoneMarcos.h"
+
+NS_STONE_BEGIN
 //一行的最大字符个数
 #define MAX_LENGTH 256
 
@@ -40,4 +43,5 @@ private:
 	std::vector<Token*> _queue;
 };
 
+NS_STONE_END
 #endif

@@ -1,6 +1,8 @@
 #include "Lexer.h"
 #include "Token.h"
 
+NS_STONE_BEGIN
+
 std::string Lexer::REGEX_POT = "\\s*((//.*)|([0-9]+)|(\"(\\\\\"|\\\\\\\\|\\\\n|[^\"])*\")|[A-Z_a-z][A-Z_a-z0-9]*|==|!=|<=|>=|[\\{\\}<>=;+\\-\\*/%()])?";
 
 
@@ -121,3 +123,4 @@ bool Lexer::fillQueue(unsigned int i) {
 	}
 	return true;
 }
+NS_STONE_END

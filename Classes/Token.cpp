@@ -1,4 +1,7 @@
 #include "Token.h"
+
+NS_STONE_BEGIN
+
 Token* const Token::TOKEN_EOF = new Token(-1);
 const std::string Token::TOKEN_EOL = "\\n";
 
@@ -54,3 +57,5 @@ std::string StrToken::getText() const
 {
 	return _literal;
 }
+
+NS_STONE_END

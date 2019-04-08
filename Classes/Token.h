@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include "StoneMarcos.h"
+
+NS_STONE_BEGIN
 /*
 	单词，有标识符、数字和字符串
 */
@@ -73,4 +76,5 @@ public:
 private:
 	std::string _literal;
 };
+NS_STONE_END
 #endif
