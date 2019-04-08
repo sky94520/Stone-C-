@@ -79,11 +79,12 @@ void Lexer::addToken(int lineNo, std::cmatch& matcher) {
 
 std::string Lexer::toStringLiteral(const std::string& s) {
 	int len = s.length();
-	int index = 1;
 	std::stringstream buffer;
+	int index = 1;
 
-	while (index < len) {
-		unsigned char c = s.at(index);
+	//去掉两边的双引号
+	while (index < len - 1) {
+		char c = s.at(index);
 
 		if (c == '\\' && index + 1 < len) {
 			int c2 = s.at(index + 1);
@@ -102,7 +103,7 @@ std::string Lexer::toStringLiteral(const std::string& s) {
 	return buffer.str();
 }
 
-bool Lexer::fillQueue(int i) {
+bool Lexer::fillQueue(unsigned int i) {
 	//读取
 	while (i >= _queue.size()) {
 		if (_hasMore)

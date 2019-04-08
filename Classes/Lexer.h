@@ -28,7 +28,7 @@ protected:
 	//遍历字符串，去掉一些字符
 	std::string toStringLiteral(const std::string& s);
 private:
-	bool fillQueue(int i);
+	bool fillQueue(unsigned int i);
 private:
 	//c++的正则匹配类
 	std::regex _pattern;
