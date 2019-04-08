@@ -8,6 +8,9 @@
 
 #include "Lexer.h"
 #include "Token.h"
+#include "Parser.h"
+#include "ASTree.h"
+#include "ParseException.h"
 
 using namespace std;
 USING_NS_STONE;
@@ -17,9 +20,42 @@ std::unique_ptr<char> getUniqueDataFromFile(const std::string& filename);
 
 int main() {
 	auto uniquePtr = std::move(getUniqueDataFromFile("1.txt"));
+	if (uniquePtr == nullptr)
+	{
+		cout << "文件打开失败" << endl;
+		return 1;
+	}
 	Lexer* lexer = new Lexer(uniquePtr.get());
 	uniquePtr.reset();
+	Parser* parser = new Parser();
+	parser->setLexer(lexer);
 
+	try 
+	{
+		throw ParseException(lexer->peek(0));
+	}
+	catch (ParseException& e)
+	{
+		cout << e.what() << endl;
+	}
+
+	//语法分析
+	/*
+	while (lexer->peek(0) != Token::TOKEN_EOF)
+	{
+		ASTree* t = parser->parse();
+		cout << t->toString() << endl;
+	}
+	*/
+
+	delete parser;
+	delete lexer;
+
+	return 0;
+}
+
+void outputLexer(Lexer* lexer)
+{
 	Token* token = lexer->read();
 	while (token != Token::TOKEN_EOF) {
 
@@ -36,9 +72,7 @@ int main() {
 		delete token;
 		token = lexer->read();
 	}
-
 	delete lexer;
-	return 0;
 }
 
 std::unique_ptr<char> getUniqueDataFromFile(const std::string& filename) {

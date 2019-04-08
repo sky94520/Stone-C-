@@ -1,0 +1,47 @@
+#ifndef __ParseException_H__
+#define __ParseException_H__
+
+#include <string>
+#include <exception>
+#include <sstream>
+
+#include "StoneMarcos.h"
+#include "Token.h"
+
+NS_STONE_BEGIN
+
+class ParseException : public std::exception
+{
+public:
+	ParseException(Token* token)
+		:ParseException("", token)
+	{
+	}
+
+	ParseException(const std::string& msg, Token* token)
+	{
+		std::stringstream in;
+		in << "syntax error around ";
+
+		if (token == Token::TOKEN_EOF)
+			in << "the last line";
+		else
+		{
+			in << "\"";
+			in << token->getText();
+			in << "\" at line ";
+			in << token->getLineNumber();
+		}
+		in << msg;
+		_msg = in.str();
+	}
+
+	virtual const char* what() const
+	{
+		return _msg.c_str();
+	}
+private:
+	std::string _msg;
+};
+NS_STONE_END
+#endif
