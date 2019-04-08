@@ -41,11 +41,19 @@ void Lexer::readLine() {
 	if (_reader.getline(line, MAX_LENGTH)) {
 		std::cmatch match;
 
-		while (strlen(line) > 0 && std::regex_search(line, match, _pattern)) {
-			//添加单词
-			this->addToken(_lineNo, match);
-			//继续向下解析
-			strcpy(line, match.suffix().str().c_str());
+		while (strlen(line) > 0) {
+			std::regex_search(line, match, _pattern);
+			//TODO:匹配失败
+			if (match[0] == "") {
+				std::cout << "bad token at line " << _lineNo << std::endl;
+				return;
+			}
+			else {
+				//添加单词
+				this->addToken(_lineNo, match);
+				//继续向下解析
+				strcpy(line, match.suffix().str().c_str());
+			}
 		}
 		//添加换行符
 		_queue.push_back(new IdToken(_lineNo++, Token::TOKEN_EOL));
