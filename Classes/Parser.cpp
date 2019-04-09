@@ -32,7 +32,7 @@ Parser::~Parser()
 
 ASTree* Parser::parse()
 {
-	return _parser->expression();
+	return _parser->program();
 }
 void Parser::setLexer(Lexer* lexer)
 {

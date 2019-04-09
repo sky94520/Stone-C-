@@ -10,13 +10,15 @@
 #include "Token.h"
 #include "Parser.h"
 #include "ASTree.h"
+#include "ASTLeaf.h"
 #include "ParseException.h"
+#include "StoneException.h"
 
 using namespace std;
 USING_NS_STONE;
 
-
 std::unique_ptr<char> getUniqueDataFromFile(const std::string& filename);
+void outputLexer(Lexer* lexer);
 
 int main() {
 	auto uniquePtr = std::move(getUniqueDataFromFile("1.txt"));
@@ -27,29 +29,36 @@ int main() {
 	}
 	Lexer* lexer = new Lexer(uniquePtr.get());
 	uniquePtr.reset();
+
 	Parser* parser = new Parser();
 	parser->setLexer(lexer);
 
-	try 
+	cout <<"token size is: "<< sizeof(Token) << endl;
+	cout <<"ASTLeaf size is: "<< sizeof(ASTLeaf) << endl;
+
+	try
 	{
-		throw ParseException(lexer->peek(0));
+		//词法分析
+		while (lexer->peek(0) != Token::TOKEN_EOF)
+		{
+		//语法分析
+			ASTree* t = parser->parse();
+
+			if (t != nullptr) 
+			{
+				cout << t->toString() << endl;
+				delete t;
+			}
+		}
 	}
 	catch (ParseException& e)
 	{
 		cout << e.what() << endl;
 	}
 
-	//语法分析
-	/*
-	while (lexer->peek(0) != Token::TOKEN_EOF)
-	{
-		ASTree* t = parser->parse();
-		cout << t->toString() << endl;
-	}
-	*/
-
 	delete parser;
 	delete lexer;
+	delete Token::TOKEN_EOF;
 
 	return 0;
 }
@@ -72,7 +81,6 @@ void outputLexer(Lexer* lexer)
 		delete token;
 		token = lexer->read();
 	}
-	delete lexer;
 }
 
 std::unique_ptr<char> getUniqueDataFromFile(const std::string& filename) {

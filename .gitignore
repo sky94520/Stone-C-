@@ -3,3 +3,5 @@ Debug/**
 Stone.sln
 Stone/Debug/**
 Stone/Stone.*
+Stone/Release
+Release

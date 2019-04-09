@@ -9,6 +9,7 @@ NegativeExpr::NegativeExpr(ASTree* a)
 }
 
 NegativeExpr::NegativeExpr(const std::vector<ASTree*>& list)
+	:ASTList(list)
 {
 }
 

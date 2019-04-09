@@ -7,6 +7,10 @@
 #include "Name.h"
 #include "StringLiteral.h"
 #include "NegativeExpr.h"
+#include "ParseException.h"
+#include "BlockStmnt.h"
+#include "IfStmnt.h"
+#include "WhileStmnt.h"
 
 NS_STONE_BEGIN
 //------------------------------------Operators-------------------------------------
@@ -74,7 +78,7 @@ ASTree* BasicParser::program()
 	//program: [statement] (";" | EOL)
 	ASTree* n = nullptr;
 	//存在statement
-	if (!isToken(";") && isToken(Token::TOKEN_EOL))
+	if (!isToken(";") && !isToken(Token::TOKEN_EOL))
 		n = this->statement();
 
 	//必须有分号或者换行
@@ -82,19 +86,21 @@ ASTree* BasicParser::program()
 
 	if (isToken(";"))
 	{
-		delete token(";");
+		token(";");
 		ret = true;
 	}
 	if (isToken(Token::TOKEN_EOL))
 	{
-		delete token(Token::TOKEN_EOL);
+		token(Token::TOKEN_EOL);
 		ret = true;
 	}
 
-	//TODO:出错
-	if (!ret)
+	if (ret)
 	{
 	}
+	//没有分号或者换行，则出错
+	else
+		throw ParseException("} expected.", _lexer->peek(0));
 	return n;
 }
 
@@ -105,17 +111,97 @@ ASTree* BasicParser::statement()
 				 | "while" expr block
 				 | simple
 	*/
-	return nullptr;
+	if (isToken("if"))
+	{
+		token("if");
+		IfStmnt* ifStmnt = nullptr;
+
+		ASTree* expression = this->expression();
+		ASTree* body = this->block();
+		ASTree* thenBlock = nullptr;
+		std::vector<ASTree*> list;
+
+		list.push_back(expression);
+		list.push_back(body);
+		//存在else语句
+		if (isToken("else"))
+		{
+			token("else");
+			thenBlock = this->block();
+			list.push_back(thenBlock);
+		}
+		ifStmnt = new IfStmnt(list);
+		return ifStmnt;
+	}
+	//循环语句
+	else if (isToken("while"))
+	{
+		token("while");
+		ASTree* expression = this->expression();
+		ASTree* body = this->block();
+		std::vector<ASTree*> list;
+		list.push_back(expression);
+		list.push_back(body);
+
+		WhileStmnt* whileStmnt = new WhileStmnt(list);
+		return whileStmnt;
+	}
+	else
+		return this->simple();
 }
 
 ASTree* BasicParser::simple()
 {
-	return nullptr;
+	return this->expression();
 }
 
 ASTree* BasicParser::block()
 {
-	return nullptr;
+	//block "{" [statement] {(";" | EOL) [statement]} "}"
+	//块必须以"{"开头
+	if (this->isToken("{"))
+	{
+		this->token("{");
+		//尝试去掉换行
+		if (this->isToken(Token::TOKEN_EOL))
+			this->token(Token::TOKEN_EOL);
+		std::vector<ASTree*> list;
+
+		//[statement]
+		if (!isToken(";") && !isToken(Token::TOKEN_EOL))
+			list.push_back(this->statement());
+
+		//{(";" | EOL) [statement] } "}"
+		while (this->isToken(";") || this->isToken(Token::TOKEN_EOL))
+		{
+			bool ret = false;
+			if (this->isToken(";"))
+			{
+				this->token(";");
+				ret = true;
+			}
+			if (this->isToken(Token::TOKEN_EOL))
+			{
+				this->token(Token::TOKEN_EOL);
+				ret = true;
+			}
+			//缺少分号或者换行
+			if (!ret)
+				throw ParseException("EOL or ; expected.", _lexer->peek(0));
+			//直接为 "}"
+			if (this->isToken("}"))
+			{
+				this->token("}");
+				break;
+			}
+			//[statement]
+			if (!this->isToken(";") && !this->isToken(Token::TOKEN_EOL))
+				list.push_back(this->statement());
+		}
+		return new BlockStmnt(list);
+	}
+	else
+		throw ParseException("{ expected.", _lexer->peek(0));
 }
 
 ASTree* BasicParser::expression()
@@ -138,7 +224,7 @@ ASTree* BasicParser::factor()
 
 	if (isToken("-"))
 	{
-		delete token("-");
+		token("-");
 
 		primary = this->primary();
 		//添加NegativeExpr
@@ -157,9 +243,9 @@ ASTree* BasicParser::primary()
 	if (isToken("("))
 	{
 		//释放内存
-		delete token("(");
+		token("(");
 		ASTree* e = expression();
-		delete token(")");
+		token(")");
 
 		return e;
 	}
@@ -188,6 +274,8 @@ ASTree* BasicParser::primary()
 			StringLiteral* n = new StringLiteral(token);
 			return n;
 		}
+		else
+			throw ParseException(token);
 	}
 	return nullptr;
 }
@@ -226,16 +314,17 @@ bool BasicParser::rightIsExpr(int prec, Precedence* nextPrec)
 		return prec <= nextPrec->value;
 }
 
-Token* BasicParser::token(const std::string& name)
+void BasicParser::token(const std::string& name)
 {
 	Token* t = _lexer->read();
 	//是标识符且名称相同
 	if (t->getType() == Token::Type::Identifier
 		&& t->getText() == name)
 	{
-		return t;
+		delete t;
 	}
-	return nullptr;
+	else
+		throw ParseException(t);
 }
 
 bool BasicParser::isToken(const std::string& name)

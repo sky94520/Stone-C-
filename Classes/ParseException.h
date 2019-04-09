@@ -13,6 +13,10 @@ NS_STONE_BEGIN
 class ParseException : public std::exception
 {
 public:
+	ParseException(const std::string& msg)
+		:_msg(msg)
+	{
+	}
 	ParseException(Token* token)
 		:ParseException("", token)
 	{

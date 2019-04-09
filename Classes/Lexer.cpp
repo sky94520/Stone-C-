@@ -1,5 +1,6 @@
 #include "Lexer.h"
 #include "Token.h"
+#include "ParseException.h"
 
 NS_STONE_BEGIN
 
@@ -45,9 +46,10 @@ void Lexer::readLine() {
 
 		while (strlen(line) > 0) {
 			std::regex_search(line, match, _pattern);
-			//TODO:Æ¥ÅäÊ§°Ü
+			//Æ¥ÅäÊ§°Ü,Å×³öÒì³£
 			if (match[0] == "") {
-				std::cout << "bad token at line " << _lineNo << std::endl;
+				std::string msg = "bad token at line " + std::to_string(_lineNo);
+				throw ParseException(msg);
 				return;
 			}
 			else {

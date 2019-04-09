@@ -86,7 +86,7 @@ protected:
 	bool rightIsExpr(int prec, Precedence* nextPrec);
 
 	//如果名称相同，则返回该单词，否则返回nullptr
-	Token* token(const std::string& name);
+	void token(const std::string& name);
 	bool isToken(const std::string& name);
 private:
 	//操作符

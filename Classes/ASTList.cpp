@@ -16,8 +16,8 @@ ASTList::~ASTList() {
 
 	while (it != _children.end())
 	{
-		auto token = *it;
-		delete token;
+		auto t = *it;
+		delete t;
 
 		it = _children.erase(it);
 	}
