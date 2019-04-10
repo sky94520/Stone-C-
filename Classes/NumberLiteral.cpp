@@ -9,7 +9,7 @@ NumberLiteral::NumberLiteral(Token* token)
 
 int NumberLiteral::getValue() const
 {
-	return getToken()->getNumber();
+	return getToken()->asInt();
 }
 
 NS_STONE_END

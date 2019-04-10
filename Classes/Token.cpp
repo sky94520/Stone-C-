@@ -23,12 +23,12 @@ NumToken::NumToken(int line, int value)
 	_type = Type::Number;
 }
 
-std::string NumToken::getText() const
+std::string NumToken::asString() const
 {
 	return std::to_string(_value);
 }
 
-int NumToken::getNumber() const {
+int NumToken::asInt() const {
 	return _value;
 }
 
@@ -40,7 +40,7 @@ IdToken::IdToken(int line,const std::string& id)
 	_type = Type::Identifier;
 }
 
-std::string IdToken::getText() const
+std::string IdToken::asString() const
 {
 	return _text;
 }
@@ -53,7 +53,7 @@ StrToken::StrToken(int line, const std::string& str)
 	_type = Type::String;
 }
 
-std::string StrToken::getText() const
+std::string StrToken::asString() const
 {
 	return _literal;
 }

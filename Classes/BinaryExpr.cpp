@@ -28,7 +28,7 @@ ASTree* BinaryExpr::getLeft() const
 
 std::string BinaryExpr::getOperator() const
 {
-	return static_cast<ASTLeaf*>(getChild(1))->getToken()->getText();
+	return static_cast<ASTLeaf*>(getChild(1))->getToken()->asString();
 }
 
 ASTree* BinaryExpr::getRight() const

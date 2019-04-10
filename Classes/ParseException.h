@@ -32,7 +32,7 @@ public:
 		else
 		{
 			in << "\"";
-			in << token->getText();
+			in << token->asString();
 			in << "\" at line ";
 			in << token->getLineNumber();
 		}

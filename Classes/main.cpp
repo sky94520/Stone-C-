@@ -76,7 +76,7 @@ void outputLexer(Lexer* lexer)
 			cout << " Êý×Ö";
 		else if (type == Token::Type::String)
 			cout << " ×Ö·û´®";
-		cout << token->getText() << endl;
+		cout << token->asString() << endl;
 
 		delete token;
 		token = lexer->read();

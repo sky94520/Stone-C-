@@ -263,7 +263,7 @@ ASTree* BasicParser::primary()
 		if (type == Token::Type::Identifier)
 		{
 			//TODO:出错
-			if (_reserved.find(token->getText()) != _reserved.end())
+			if (_reserved.find(token->asString()) != _reserved.end())
 				return nullptr;
 			Name* n = new Name(token);
 			return n;
@@ -303,7 +303,7 @@ Precedence* BasicParser::nextOperator()
 	Token* token = _lexer->peek(0);
 	//为标识符,则获取名称对应的优先权
 	if (token->getType() == Token::Type::Identifier)
-		return _operators.get(token->getText());
+		return _operators.get(token->asString());
 	return nullptr;
 }
 bool BasicParser::rightIsExpr(int prec, Precedence* nextPrec)
@@ -319,7 +319,7 @@ void BasicParser::token(const std::string& name)
 	Token* t = _lexer->read();
 	//是标识符且名称相同
 	if (t->getType() == Token::Type::Identifier
-		&& t->getText() == name)
+		&& t->asString() == name)
 	{
 		delete t;
 	}
@@ -331,7 +331,7 @@ bool BasicParser::isToken(const std::string& name)
 {
 	Token* t = _lexer->peek(0);
 
-	return t->getType() == Token::Type::Identifier && t->getText() == name;
+	return t->getType() == Token::Type::Identifier && t->asString() == name;
 }
 
 NS_STONE_END

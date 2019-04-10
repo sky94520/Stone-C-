@@ -315,6 +315,7 @@ std::string Value::asString()const
 		return "";
 	if (_type == Type::STRING)
 		return *_field.stringVal;
+
 	std::stringstream ret;
 	switch (_type)
 	{

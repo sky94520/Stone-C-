@@ -31,7 +31,7 @@ int ASTLeaf::getNumChildren() const
 
 std::string ASTLeaf::getLocation() const
 {
-	return "at line " + _token->getText();
+	return "at line " + _token->asString();
 }
 
 std::vector<ASTree*>::iterator ASTLeaf::begin()
@@ -46,6 +46,6 @@ std::vector<ASTree*>::iterator ASTLeaf::end()
 
 std::string ASTLeaf::toString() const
 {
-	return _token->getText();
+	return _token->asString();
 }
 NS_STONE_END

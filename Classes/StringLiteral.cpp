@@ -10,7 +10,7 @@ StringLiteral::StringLiteral(Token* token)
 
 std::string StringLiteral::getValue() const
 {
-	return getToken()->getText();
+	return getToken()->asString();
 }
 
 NS_STONE_END

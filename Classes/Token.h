@@ -27,9 +27,9 @@ public:
 	//获取单词的类型
 	Type getType() const { return _type; }
 	//获取文本
-	virtual std::string getText() const { return ""; }
+	virtual std::string asString() const { return ""; }
 	//获取数字
-	virtual int getNumber() const { return 0; }
+	virtual int asInt() const { return 0; }
 protected:
 	int _line;
 	Type _type;
@@ -47,8 +47,8 @@ class NumToken: public Token
 {
 public:
 	NumToken(int line, int value);
-	virtual std::string getText() const;
-	virtual int getNumber() const;
+	virtual std::string asString() const;
+	virtual int asInt() const;
 private:
 	int _value;
 };
@@ -60,7 +60,7 @@ class IdToken : public Token
 {
 public:
 	IdToken(int line, const std::string& id);
-	virtual std::string getText() const;
+	virtual std::string asString() const;
 private:
 	std::string _text;
 };
@@ -72,7 +72,7 @@ class StrToken : public Token
 {
 public:
 	StrToken(int line, const std::string& str);
-	virtual std::string getText() const;
+	virtual std::string asString() const;
 private:
 	std::string _literal;
 };

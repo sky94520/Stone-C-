@@ -10,6 +10,6 @@ Name::Name(Token* token)
 
 std::string Name::getName() const
 {
-	return getToken()->getText();
+	return getToken()->asString();
 }
 NS_STONE_END
