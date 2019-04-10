@@ -6,4 +6,6 @@
 
 #define USING_NS_STONE using namespace Stone;
 
+#define STONE_SAFE_DELETE(p) do{ if(p) delete p; p=nullptr;}while(0)
+
 #endif
