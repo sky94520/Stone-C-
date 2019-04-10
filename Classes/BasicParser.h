@@ -1,5 +1,5 @@
-#ifndef __BasicParser_H__
-#define __BasicParser_H__
+#ifndef __Stone_BasicParser_H__
+#define __Stone_BasicParser_H__
 
 #include <string>
 #include <unordered_set>

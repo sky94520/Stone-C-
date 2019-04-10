@@ -1,5 +1,5 @@
-#ifndef __BinaryExpr_H__
-#define __BinaryExpr_H__
+#ifndef __Stone_BinaryExpr_H__
+#define __Stone_BinaryExpr_H__
 
 #include <vector>
 #include <string>

@@ -1,5 +1,5 @@
-#ifndef __NegativeExpr_H__
-#define __NegativeExpr_H__
+#ifndef __Stone_NegativeExpr_H__
+#define __Stone_NegativeExpr_H__
 
 #include <vector>
 #include <string>

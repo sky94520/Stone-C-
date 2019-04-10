@@ -1,5 +1,5 @@
-#ifndef __WhileStmnt_H__
-#define __WhileStmnt_H__
+#ifndef __Stone_WhileStmnt_H__
+#define __Stone_WhileStmnt_H__
 
 #include "ASTList.h"
 

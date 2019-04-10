@@ -1,5 +1,5 @@
-#ifndef __Name_H__
-#define __Name_H__
+#ifndef __Stone_Name_H__
+#define __Stone_Name_H__
 
 #include "ASTLeaf.h"
 

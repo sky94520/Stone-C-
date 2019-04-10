@@ -1,5 +1,5 @@
-#ifndef __NumberLiteral_H__
-#define __NumberLiteral_H__
+#ifndef __Stone_NumberLiteral_H__
+#define __Stone_NumberLiteral_H__
 
 #include "ASTLeaf.h"
 NS_STONE_BEGIN

@@ -1,5 +1,5 @@
-#ifndef __Lexer_H__
-#define __Lexer_H__
+#ifndef __Stone_Lexer_H__
+#define __Stone_Lexer_H__
 #include <iostream>
 #include <string>
 #include <regex>

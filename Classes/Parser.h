@@ -1,5 +1,5 @@
-#ifndef __Parser_H__
-#define __Parser_H__
+#ifndef __Stone_Parser_H__
+#define __Stone_Parser_H__
 
 #include "StoneMarcos.h"
 NS_STONE_BEGIN

@@ -1,5 +1,5 @@
-#ifndef __StoneException_H__
-#define __StoneException_H__
+#ifndef __Stone_StoneException_H__
+#define __Stone_StoneException_H__
 
 #include <string>
 #include <exception>

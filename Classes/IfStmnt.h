@@ -1,5 +1,5 @@
-#ifndef __IfStmnt_H__
-#define __IfStmnt_H__
+#ifndef __Stone_IfStmnt_H__
+#define __Stone_IfStmnt_H__
 
 #include <vector>
 #include <string>

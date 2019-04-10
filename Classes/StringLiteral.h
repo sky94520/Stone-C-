@@ -1,5 +1,5 @@
-#ifndef __StringLiteral_H__
-#define __StringLiteral_H__
+#ifndef __Stone_StringLiteral_H__
+#define __Stone_StringLiteral_H__
 
 #include <string>
 

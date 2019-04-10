@@ -1,5 +1,5 @@
-#ifndef __ASTList_H__
-#define __ASTList_H__
+#ifndef __Stone_ASTList_H__
+#define __Stone_ASTList_H__
 
 #include <vector>
 #include <string>

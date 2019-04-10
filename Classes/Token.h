@@ -1,5 +1,5 @@
-#ifndef __Token_H__
-#define __Token_H__
+#ifndef __Stone_Token_H__
+#define __Stone_Token_H__
 
 #include <string>
 

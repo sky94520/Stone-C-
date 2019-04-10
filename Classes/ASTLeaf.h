@@ -1,5 +1,5 @@
-#ifndef __ASTLeaf_H__
-#define __ASTLeaf_H__
+#ifndef __Stone_ASTLeaf_H__
+#define __Stone_ASTLeaf_H__
 
 #include <vector>
 
