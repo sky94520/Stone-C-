@@ -107,8 +107,8 @@ ASTree* BasicParser::program()
 ASTree* BasicParser::statement()
 {
 	/*
-		statement: "if" expr block {elseif expr block} ["else" block]
-				 | "while" expr block
+		statement: "if" expr [EOL] block { [EOL] elseif expr [EOL] block} [EOL] ["else" [EOL] block]
+				 | "while" expr [EOL] block
 				 | simple
 	*/
 	if (isToken("if"))
@@ -118,21 +118,37 @@ ASTree* BasicParser::statement()
 		std::vector<ASTree*> list;
 
 		list.push_back(this->expression());
+		//去掉换行
+		if (isToken(Token::TOKEN_EOL))
+			token(Token::TOKEN_EOL);
+
 		list.push_back(this->block());
 
-		//elseif expr block
+		//elseif [EOL] expr block
+		if (isToken(Token::TOKEN_EOL))
+			token(Token::TOKEN_EOL);
 		while (isToken("elseif"))
 		{
 			token("elseif");
 			list.push_back(this->expression());
+			//去掉换行
+			if (isToken(Token::TOKEN_EOL))
+				token(Token::TOKEN_EOL);
 			list.push_back(this->block());
+			//去掉换行
+			if (isToken(Token::TOKEN_EOL))
+				token(Token::TOKEN_EOL);
 		}
-
-		//存在else语句
+		//[EOL] ["else" [EOL] block]
+		if (isToken(Token::TOKEN_EOL))
+			token(Token::TOKEN_EOL);
 		ASTree* elseBlock = nullptr;
 		if (isToken("else"))
 		{
 			token("else");
+			//去掉换行
+			if (isToken(Token::TOKEN_EOL))
+				token(Token::TOKEN_EOL);
 			elseBlock = this->block();
 		}
 		ifStmnt = new IfStmnt(list, elseBlock);
@@ -142,11 +158,12 @@ ASTree* BasicParser::statement()
 	else if (isToken("while"))
 	{
 		token("while");
-		ASTree* expression = this->expression();
-		ASTree* body = this->block();
 		std::vector<ASTree*> list;
-		list.push_back(expression);
-		list.push_back(body);
+		list.push_back(this->expression());
+		//去掉换行
+		if (isToken(Token::TOKEN_EOL))
+			token(Token::TOKEN_EOL);
+		list.push_back(this->block());
 
 		WhileStmnt* whileStmnt = new WhileStmnt(list);
 		return whileStmnt;
