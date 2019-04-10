@@ -1,33 +1,49 @@
 #include "IfStmnt.h"
 NS_STONE_BEGIN
 
-IfStmnt::IfStmnt(const std::vector<ASTree*>& list)
+IfStmnt::IfStmnt(const std::vector<ASTree*>& list, ASTree* elseBlock)
 	:ASTList(list)
+	,_elseBlock(elseBlock)
 {
 }
 
-ASTree* IfStmnt::getCondition() const
+ASTree* IfStmnt::getCondition(unsigned int i) const
 {
-	return getChild(0);
+	return getChild(i * 2);
 }
 
-ASTree* IfStmnt::getThenBlock() const
+ASTree* IfStmnt::getThenBlock(unsigned int i) const
 {
-	return getChild(1);
+	return getChild(i * 2 + 1);
 }
 
 ASTree* IfStmnt::getElseBlock() const
 {
-	return getNumChildren() > 2 ? getChild(2) : nullptr;
+	return _elseBlock;
+}
+
+unsigned int IfStmnt::getIfNumber() const
+{
+	return getNumChildren() / 2;
 }
 
 std::string IfStmnt::toString() const
 {
 	std::stringstream in;
+	unsigned index = 0;
 	in << "(if ";
-	in << getCondition()->toString();
+	in << getCondition(index)->toString();
 	in << " ";
-	in << getThenBlock()->toString();
+	in << getThenBlock(index)->toString();
+
+	for (index = 1; index < this->getIfNumber(); index++)
+	{
+		in << "(elseif ";
+		in << getCondition(index)->toString();
+		in << " ";
+		in << getThenBlock(index)->toString();
+	}
+
 	if (getElseBlock() != nullptr)
 		in << " else" << getElseBlock()->toString();
 	in << ")";

@@ -107,7 +107,7 @@ ASTree* BasicParser::program()
 ASTree* BasicParser::statement()
 {
 	/*
-		statement: "if" expr block ["else" block]
+		statement: "if" expr block {elseif expr block} ["else" block]
 				 | "while" expr block
 				 | simple
 	*/
@@ -115,22 +115,27 @@ ASTree* BasicParser::statement()
 	{
 		token("if");
 		IfStmnt* ifStmnt = nullptr;
-
-		ASTree* expression = this->expression();
-		ASTree* body = this->block();
-		ASTree* thenBlock = nullptr;
 		std::vector<ASTree*> list;
 
-		list.push_back(expression);
-		list.push_back(body);
+		list.push_back(this->expression());
+		list.push_back(this->block());
+
+		//elseif expr block
+		while (isToken("elseif"))
+		{
+			token("elseif");
+			list.push_back(this->expression());
+			list.push_back(this->block());
+		}
+
 		//´æÔÚelseÓï¾ä
+		ASTree* elseBlock = nullptr;
 		if (isToken("else"))
 		{
 			token("else");
-			thenBlock = this->block();
-			list.push_back(thenBlock);
+			elseBlock = this->block();
 		}
-		ifStmnt = new IfStmnt(list);
+		ifStmnt = new IfStmnt(list, elseBlock);
 		return ifStmnt;
 	}
 	//Ñ­»·Óï¾ä

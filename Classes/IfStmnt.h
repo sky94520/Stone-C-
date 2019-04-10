@@ -11,12 +11,15 @@ NS_STONE_BEGIN
 
 class IfStmnt : public ASTList
 {
+private:
+	ASTree* _elseBlock;
 public:
-	IfStmnt(const std::vector<ASTree*>& list);
+	IfStmnt(const std::vector<ASTree*>& list, ASTree* elseBlock);
 
-	ASTree* getCondition() const;
-	ASTree* getThenBlock() const;
+	ASTree* getCondition(unsigned int i) const;
+	ASTree* getThenBlock(unsigned int i) const;
 	ASTree* getElseBlock() const;
+	unsigned int getIfNumber() const;
 
 	virtual std::string toString() const;
 };
