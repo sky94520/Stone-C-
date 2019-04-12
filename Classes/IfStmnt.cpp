@@ -1,4 +1,6 @@
 #include "IfStmnt.h"
+#include "Visitor.h"
+
 NS_STONE_BEGIN
 
 IfStmnt::IfStmnt(const std::vector<ASTree*>& list, ASTree* elseBlock)
@@ -25,6 +27,11 @@ ASTree* IfStmnt::getElseBlock() const
 unsigned int IfStmnt::getIfNumber() const
 {
 	return getNumChildren() / 2;
+}
+
+void IfStmnt::accept(Visitor* v, Environment* env)
+{
+	v->visit(this, env);
 }
 
 std::string IfStmnt::toString() const

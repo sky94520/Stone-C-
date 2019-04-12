@@ -1,4 +1,5 @@
 #include "WhileStmnt.h"
+#include "Visitor.h"
 
 NS_STONE_BEGIN
 
@@ -15,6 +16,11 @@ ASTree* WhileStmnt::getCondition() const
 ASTree* WhileStmnt::getBody() const
 {
 	return getChild(1);
+}
+
+void WhileStmnt::accept(Visitor* v, Environment* env)
+{
+	v->visit(this, env);
 }
 
 std::string WhileStmnt::toString() const

@@ -9,6 +9,8 @@
 NS_STONE_BEGIN
 
 class ASTree;
+class Visitor;
+class Environment;
 
 class NegativeExpr : public ASTList
 {
@@ -19,6 +21,8 @@ public:
 	//?
 	ASTree* getOperand();
 	std::string toString() const;
+public:
+	virtual void accept(Visitor* v, Environment* env);
 };
 NS_STONE_END
 #endif

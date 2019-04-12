@@ -17,7 +17,7 @@ protected:
 public:
 	virtual ~Environment() {}
 	virtual void put(const std::string& name, const Value& value) = 0;
-	virtual const Value& get(const std::string& name) const = 0;
+	virtual const Value* get(const std::string& name) const = 0;
 
 	//Ìí¼ÓÒıÓÃ
 	void retain()

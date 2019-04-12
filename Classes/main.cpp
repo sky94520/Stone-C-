@@ -13,6 +13,8 @@
 #include "ASTLeaf.h"
 #include "ParseException.h"
 #include "StoneException.h"
+#include "NestedEnv.h"
+#include "EvalVisitor.h"
 
 using namespace std;
 USING_NS_STONE;
@@ -32,6 +34,10 @@ int main() {
 
 	Parser* parser = new Parser();
 	parser->setLexer(lexer);
+	//创建环境
+	NestedEnv* env = new NestedEnv();
+	//创建解析器
+	EvalVisitor* visitor = new EvalVisitor();
 
 	cout <<"token size is: "<< sizeof(Token) << endl;
 	cout <<"ASTLeaf size is: "<< sizeof(ASTLeaf) << endl;
@@ -42,10 +48,12 @@ int main() {
 		while (lexer->peek(0) != Token::TOKEN_EOF)
 		{
 		//语法分析
-			ASTree* t = parser->parse();
+			auto t = parser->parse();
 
 			if (t != nullptr) 
 			{
+				//计算
+				t->accept(visitor, env);
 				cout << t->toString() << endl;
 				delete t;
 			}
@@ -56,6 +64,8 @@ int main() {
 		cout << e.what() << endl;
 	}
 
+	delete visitor;
+	delete env;
 	delete parser;
 	delete lexer;
 	delete Token::TOKEN_EOF;

@@ -1,5 +1,7 @@
 #include "ASTLeaf.h"
 #include "Token.h"
+#include "Visitor.h"
+
 NS_STONE_BEGIN
 
 std::vector<ASTree*> ASTLeaf::empty = std::vector<ASTree*>();
@@ -17,6 +19,11 @@ ASTLeaf::~ASTLeaf()
 Token* ASTLeaf::getToken() const
 {
 	return _token;
+}
+
+void ASTLeaf::accept(Visitor* v, Environment* env)
+{
+	v->visit(this, env);
 }
 
 ASTree* ASTLeaf::getChild(unsigned int i) const

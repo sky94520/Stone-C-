@@ -8,10 +8,15 @@
 
 NS_STONE_BEGIN
 
+class Visitor;
+class Environment;
+
 class BlockStmnt : public ASTList
 {
 public:
 	BlockStmnt(const std::vector<ASTree*>& list);
+public:
+	virtual void accept(Visitor* v, Environment* env);
 };
 NS_STONE_END
 #endif

@@ -61,17 +61,21 @@ void NestedEnv::put(const std::string& name, const Value& value)
 	env->put(name, value);
 }
 
-const Value& NestedEnv::get(const std::string& name) const
+const Value* NestedEnv::get(const std::string& name) const
 {
 	//先在本环境中查找
 	auto it = _values.find(name);
 
-	if (it == _values.end() && _outer != nullptr)
-		return _outer->get(name);
-	else
+	//在本环境内存在该变量
+	if (it != _values.end())
 	{
-		auto& value = it->second;
-		return value;
+		return &(it->second);
 	}
+	//本环境不存在该变量但有父环境
+	else if (_outer != nullptr)
+	{
+		return _outer->get(name);
+	}
+	return nullptr;
 }
 NS_STONE_END

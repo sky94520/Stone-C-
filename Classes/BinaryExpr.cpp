@@ -1,6 +1,7 @@
 #include "BinaryExpr.h"
 #include "ASTLeaf.h"
 #include "Token.h"
+#include "Visitor.h"
 
 NS_STONE_BEGIN
 
@@ -19,6 +20,11 @@ BinaryExpr::BinaryExpr(ASTree* left, ASTLeaf* op, ASTree* right)
 
 BinaryExpr::~BinaryExpr()
 {
+}
+
+void BinaryExpr::accept(Visitor* v, Environment* env)
+{
+	v->visit(this, env);
 }
 
 ASTree* BinaryExpr::getLeft() const

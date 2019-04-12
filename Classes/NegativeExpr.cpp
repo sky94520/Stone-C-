@@ -1,5 +1,6 @@
 #include "NegativeExpr.h"
 #include "ASTree.h"
+#include "Visitor.h"
 
 NS_STONE_BEGIN
 
@@ -21,5 +22,10 @@ ASTree* NegativeExpr::getOperand()
 std::string NegativeExpr::toString() const
 {
 	return "-" + getChild(0)->toString();
+}
+
+void NegativeExpr::accept(Visitor* v, Environment* env)
+{
+	v->visit(this, env);
 }
 NS_STONE_END

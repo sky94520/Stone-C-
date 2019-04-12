@@ -1,4 +1,5 @@
 #include "ASTList.h"
+#include "Visitor.h"
 
 NS_STONE_BEGIN
 
@@ -22,6 +23,12 @@ ASTList::~ASTList() {
 		it = _children.erase(it);
 	}
 }
+
+void ASTList::accept(Visitor* v, Environment* env)
+{
+	v->visit(this, env);
+}
+
 ASTree* ASTList::getChild(unsigned int i) const
 {
 	return _children.at(i);

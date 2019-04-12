@@ -10,6 +10,8 @@
 NS_STONE_BEGIN
 
 class ASTree;
+class Visitor;
+class Environment;
 
 class ASTList : public ASTree 
 {
@@ -18,6 +20,7 @@ public:
 	ASTList(const std::vector<ASTree*>& list);
 	virtual ~ASTList();
 public:
+	virtual void accept(Visitor* v, Environment* env);
 	virtual ASTree* getChild(unsigned int i) const;
 	virtual int getNumChildren() const;
 	virtual std::string getLocation() const;

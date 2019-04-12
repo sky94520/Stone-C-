@@ -7,6 +7,8 @@
 
 NS_STONE_BEGIN
 class Token;
+class Visitor;
+class Environment;
 
 class ASTLeaf : public ASTree {
 public:
@@ -15,6 +17,7 @@ public:
 	//ªÒ»°token
 	Token* getToken() const;
 
+	virtual void accept(Visitor* v, Environment* env);
 	virtual ASTree* getChild(unsigned int i) const;
 	virtual int getNumChildren() const;
 	virtual std::string getLocation() const;

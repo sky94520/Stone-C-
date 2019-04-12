@@ -6,6 +6,8 @@
 NS_STONE_BEGIN
 
 class Token;
+class Visitor;
+class Environment;
 
 class Name : public ASTLeaf
 {
@@ -13,6 +15,8 @@ public:
 	Name(Token* token);
 
 	std::string getName() const;
+public:
+	virtual void accept(Visitor* v, Environment* env);
 };
 
 NS_STONE_END

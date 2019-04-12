@@ -5,6 +5,9 @@
 
 NS_STONE_BEGIN
 
+class Visitor;
+class Environment;
+
 class WhileStmnt : public ASTList
 {
 public:
@@ -13,6 +16,8 @@ public:
 	ASTree* getCondition() const;
 	ASTree* getBody() const;
 
+public:
+	virtual void accept(Visitor* v, Environment* env);
 	virtual std::string toString() const;
 };
 NS_STONE_END

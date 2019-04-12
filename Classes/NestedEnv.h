@@ -23,7 +23,7 @@ public:
 	Environment* where(const std::string& name);
 
 	virtual void put(const std::string& name, const Value& value);
-	virtual const Value& get(const std::string& name) const;
+	virtual const Value* get(const std::string& name) const;
 private:
 	std::unordered_map<std::string, Value> _values;
 	Environment* _outer;

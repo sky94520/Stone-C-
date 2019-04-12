@@ -8,9 +8,14 @@
 
 NS_STONE_BEGIN
 
+class Visitor;
+class Environment;
+
 class ASTree {
 public:
 	virtual ~ASTree(){ }
+public:
+	virtual void accept(Visitor* v, Environment* env);
 	virtual ASTree* getChild(unsigned int i) const = 0;
 	virtual int getNumChildren() const = 0;
 	virtual std::string getLocation() const = 0;

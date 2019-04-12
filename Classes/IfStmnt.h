@@ -9,6 +9,9 @@
 
 NS_STONE_BEGIN
 
+class Visitor;
+class Environment;
+
 class IfStmnt : public ASTList
 {
 private:
@@ -20,7 +23,8 @@ public:
 	ASTree* getThenBlock(unsigned int i) const;
 	ASTree* getElseBlock() const;
 	unsigned int getIfNumber() const;
-
+public:
+	virtual void accept(Visitor* v, Environment* env);
 	virtual std::string toString() const;
 };
 NS_STONE_END
