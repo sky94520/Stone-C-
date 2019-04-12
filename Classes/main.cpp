@@ -39,9 +39,6 @@ int main() {
 	//创建解析器
 	EvalVisitor* visitor = new EvalVisitor();
 
-	cout <<"token size is: "<< sizeof(Token) << endl;
-	cout <<"ASTLeaf size is: "<< sizeof(ASTLeaf) << endl;
-
 	try
 	{
 		//词法分析
@@ -54,7 +51,7 @@ int main() {
 			{
 				//计算
 				t->accept(visitor, env);
-				cout << t->toString() << endl;
+				cout << t->toString() << "=>" << visitor->result.asString() << endl;
 				delete t;
 			}
 		}

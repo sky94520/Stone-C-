@@ -37,7 +37,14 @@ void NestedEnv::setOuter(Environment* env)
 	
 void NestedEnv::putNew(const std::string& name, const Value& value)
 {
-	_values.emplace(name, value);
+	auto it = _values.find(name);
+
+	if (it != _values.end())
+	{
+		it->second = value;
+	}
+	else
+		_values.emplace(name, value);
 }
 
 Environment* NestedEnv::where(const std::string& name)
@@ -58,7 +65,7 @@ void NestedEnv::put(const std::string& name, const Value& value)
 	if (env == nullptr)
 		env = this;
 
-	env->put(name, value);
+	static_cast<NestedEnv*>(env)->putNew(name, value);
 }
 
 const Value* NestedEnv::get(const std::string& name) const

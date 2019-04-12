@@ -1,6 +1,8 @@
 #ifndef __Stone_EvalVisitor_H__
 #define __Stone_EvalVisitor_H__
 
+#include <string>
+
 #include "Visitor.h"
 #include "Value.h"
 
@@ -36,6 +38,9 @@ public:
 	virtual void visit(IfStmnt* t, Environment* env);
 	virtual void visit(WhileStmnt* t, Environment* env);
 private:
+	Value computeOp(ASTree* t, const Value& left, const std::string& op, const Value& right);
+	//TODO: 暂时为整数
+	int computeNumber(ASTree* t, int left, const std::string& op, int right);
 };
 NS_STONE_END
 #endif // ! __Stone_EvalVisitor_H__
