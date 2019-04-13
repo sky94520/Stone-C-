@@ -60,6 +60,10 @@ int main() {
 	{
 		cout << e.what() << endl;
 	}
+	catch (StoneException& e)
+	{
+		cout << e.what() << endl;
+	}
 
 	delete visitor;
 	delete env;
