@@ -38,7 +38,7 @@ int ASTLeaf::getNumChildren() const
 
 std::string ASTLeaf::getLocation() const
 {
-	return "at line " + _token->asString();
+	return "at line " + std::to_string(_token->getLineNumber());
 }
 
 std::vector<ASTree*>::iterator ASTLeaf::begin()

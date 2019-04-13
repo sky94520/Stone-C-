@@ -2,6 +2,7 @@
 #define __Stone_ASTLeaf_H__
 
 #include <vector>
+#include <string>
 
 #include "ASTree.h"
 
