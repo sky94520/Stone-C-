@@ -82,7 +82,9 @@ Value& Value::operator=(const Value&v)
 	//如果两地址相同，直接返回
 	if (this == &v)
 		return *this;
-	reset(v._type);
+
+	this->reset(v._type);
+
 	switch (v._type)
 	{
 	case Type::BYTE:_field.byteVal = v._field.byteVal; break;
@@ -293,20 +295,34 @@ double Value::asDouble()const
 }
 bool Value::asBool()const
 {
+	bool ret = false;
 	//无法转换
 	if (_type == Type::VECTOR)
-		return 0;
+		return ret;
+
 	switch (_type)
 	{
-	case Type::BYTE:return _field.byteVal == 0 ? false : true; break;
-	case Type::INTEGER:return _field.intVal == 0 ? false : true; break;
-	case Type::FLOAT:return _field.floatVal == 0.f ? false : true; break;
-	case Type::DOUBLE:return _field.doubleVal == 0.0 ? false : true; break;
-	case Type::BOOLEAN:return _field.boolVal;
-	case Type::STRING:return *_field.stringVal == "0" || *_field.stringVal == "false" ? false : true; break;
+	case Type::BYTE:
+		ret =  (_field.byteVal == 0 ? false : true);
+		break;
+	case Type::INTEGER:
+		ret = (_field.intVal == 0 ? false : true);
+		break;
+	case Type::FLOAT:
+		ret = (_field.floatVal == 0.f ? false : true);
+		break;
+	case Type::DOUBLE:
+		ret = (_field.doubleVal == 0.0 ? false : true);
+		break;
+	case Type::BOOLEAN:
+		ret = _field.boolVal;
+		break;
+	case Type::STRING:
+		ret = (*_field.stringVal == "0" || *_field.stringVal == "false" ? false : true); 
+		break;
 	default:break;
 	}
-	return false;
+	return ret;
 }
 std::string Value::asString()const
 {
@@ -319,11 +335,21 @@ std::string Value::asString()const
 	std::stringstream ret;
 	switch (_type)
 	{
-	case Type::BYTE:ret << _field.byteVal; break;
-	case Type::INTEGER:ret << _field.intVal; break;
-	case Type::FLOAT:ret << _field.floatVal; break;
-	case Type::DOUBLE:ret << _field.doubleVal; break;
-	case Type::BOOLEAN:ret << (_field.boolVal ? "true" : "false"); break;
+	case Type::BYTE:
+		ret << _field.byteVal; 
+		break;
+	case Type::INTEGER:
+		ret << _field.intVal;
+		break;
+	case Type::FLOAT:
+		ret << _field.floatVal;
+		break;
+	case Type::DOUBLE:
+		ret << _field.doubleVal; 
+		break;
+	case Type::BOOLEAN:
+		ret << (_field.boolVal ? "true" : "false"); 
+		break;
 	}
 	return ret.str();
 }
