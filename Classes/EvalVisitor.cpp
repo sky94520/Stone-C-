@@ -117,7 +117,7 @@ void EvalVisitor::visit(IfStmnt* t, Environment* env)
 		//ÅÐ¶Ï·µ»ØÖµ
 		if (this->result.asBool())
 		{
-			t->getThenBlock(i);
+			t->getThenBlock(i)->accept(this, env);
 			return ;
 		}
 	}
@@ -130,6 +130,7 @@ void EvalVisitor::visit(IfStmnt* t, Environment* env)
 
 void EvalVisitor::visit(WhileStmnt* t, Environment* env)
 {
+	Value value;
 	do 
 	{
 		//ÅÐ¶ÏÌõ¼þ
@@ -138,8 +139,11 @@ void EvalVisitor::visit(WhileStmnt* t, Environment* env)
 			break;
 		//Ö´ÐÐÓï¾ä
 		t->getBody()->accept(this, env);
+		//ÔÝ´æ·µ»ØÖµ
+		value = this->result;
 
 	} while (1);
+	this->result = value;
 }
 
 Value EvalVisitor::computeOp(ASTree* t, const Value& left, const std::string& op, const Value& right)
