@@ -6,7 +6,7 @@ NS_STONE_BEGIN
 
 class ASTree;
 class Lexer;
-class BasicParser;
+class FuncParser;
 
 class Parser
 {
@@ -16,7 +16,7 @@ public:
 	ASTree* parse();
 	void setLexer(Lexer* lexer);
 private:
-	BasicParser* _parser;
+	FuncParser* _parser;
 };
 
 NS_STONE_END

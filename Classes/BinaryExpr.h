@@ -20,6 +20,7 @@ public:
 	virtual ~BinaryExpr();
 public:
 	virtual void accept(Visitor* v, Environment* env);
+
 	ASTree* getLeft() const;
 	std::string getOperator() const;
 	ASTree* getRight() const;

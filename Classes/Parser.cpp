@@ -1,5 +1,5 @@
 #include "Parser.h"
-#include "BasicParser.h"
+#include "FuncParser.h"
 #include "Lexer.h"
 #include "Token.h"
 
@@ -7,7 +7,7 @@ NS_STONE_BEGIN
 
 Parser::Parser()
 {
-	_parser = new BasicParser();
+	_parser = new FuncParser();
 	//Ìí¼Ó±£Áô×Ö·û
 	_parser->addReservedWord(";");
 	_parser->addReservedWord("}");

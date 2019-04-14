@@ -13,6 +13,12 @@
 #include "BlockStmnt.h"
 #include "IfStmnt.h"
 #include "WhileStmnt.h"
+#include "PrimaryExpr.h"
+#include "Postfix.h"
+#include "Arguments.h"
+#include "ParameterList.h"
+#include "DefStmnt.h"
+#include "Function.h"
 
 NS_STONE_BEGIN
 void EvalVisitor::visit(ASTree* t, Environment* env)
@@ -48,7 +54,9 @@ void EvalVisitor::visit(Name* t, Environment* env)
 		throw StoneException("undefined name: " + name, t);
 	}
 	else
+	{
 		result = Value(*value);
+	}
 }
 
 void EvalVisitor::visit(NegativeExpr* t, Environment* env)
@@ -146,6 +154,58 @@ void EvalVisitor::visit(WhileStmnt* t, Environment* env)
 	this->result = value;
 }
 
+void EvalVisitor::visit(PrimaryExpr* t, Environment* env)
+{
+	//Name {Arguments}
+	this->evalSubExpr(t, env, 0);
+}
+
+void EvalVisitor::visit(Postfix* t, Environment* env)
+{
+}
+
+void EvalVisitor::visit(Arguments* t, Environment* env)
+{
+	Function* function = this->result.asFunction();
+	//获取function需要的参数列表
+	ParameterList* params = function->getParameters();
+
+	if (t->getSize() != params->getSize())
+		throw StoneException("bad number of arguments", t);
+	//创建一个新的环境
+	Environment* newEnv = function->makeEnv();
+	//放入参数和对应的值
+	for (int i = 0; i < t->getNumChildren(); i++)
+	{
+		auto args = t->getChild(i);
+		//先计算
+		args->accept(this, env);
+		//调用
+		this->visit(params, newEnv, i);
+	}
+	//执行函数体
+	this->visit(function->getBody(), newEnv);
+
+	newEnv->release();
+}
+
+void EvalVisitor::visit(ParameterList* t, Environment* env, unsigned index)
+{
+	env->putNew(t->getName(index), this->result);
+}
+
+void EvalVisitor::visit(DefStmnt* t, Environment* env)
+{
+	//直接在本环境下添加Function对象
+	Function* function = new Function(t->getParameters(), t->getBody(), env);
+	Value value = Value(function);
+	env->putNew(t->getName(), value);
+	this->result = t->getName();
+
+	function->release();
+}
+
+//---------------------------------BinaryExpr---------------------------
 Value EvalVisitor::computeOp(ASTree* t, const Value& left, const std::string& op, const Value& right)
 {
 	Value value;
@@ -188,5 +248,24 @@ int EvalVisitor::computeNumber(ASTree* t, int left, const std::string& op, int r
 		return left < right;
 	else
 		throw StoneException("bad operator", t);
+}
+//---------------------------PrimaryExpr---------------------
+void EvalVisitor::evalSubExpr(PrimaryExpr* t, Environment* env, int nest)
+{
+	//对于形如 foo(2)(3) 依次从左往右调用
+	if (t->getNumChildren() - nest > 1)
+	{
+		this->evalSubExpr(t, env, nest + 1);
+		//TODO:目前先强制转换为Arguments
+		auto postfix = t->getChild(t->getNumChildren() - nest - 1);
+		//调用Arguments,即调用函数 这里的函数已经在this->result之中
+		postfix->accept(this, env);
+	}
+	//返回名字对应的函数，并放入this->result之中
+	else
+	{
+		auto name = static_cast<Name*>(t->getChild(0));
+		this->visit(name, env);
+	}
 }
 NS_STONE_END

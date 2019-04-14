@@ -18,7 +18,7 @@ ASTList::~ASTList() {
 	while (it != _children.end())
 	{
 		auto t = *it;
-		delete t;
+		t->release();
 
 		it = _children.erase(it);
 	}

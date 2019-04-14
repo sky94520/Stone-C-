@@ -34,6 +34,17 @@ void NestedEnv::setOuter(Environment* env)
 	}
 	_outer = env;
 }
+
+Environment* NestedEnv::where(const std::string& name)
+{
+	//本环境下存在该变量，则直接返回
+	if (_values.find(name) != _values.end())
+		return this;
+	else if (_outer == nullptr)
+		return nullptr;
+	else
+		return static_cast<NestedEnv*>(_outer)->where(name);
+}
 	
 void NestedEnv::putNew(const std::string& name, const Value& value)
 {
@@ -47,16 +58,6 @@ void NestedEnv::putNew(const std::string& name, const Value& value)
 		_values.emplace(name, value);
 }
 
-Environment* NestedEnv::where(const std::string& name)
-{
-	//本环境下存在该变量，则直接返回
-	if (_values.find(name) != _values.end())
-		return this;
-	else if (_outer == nullptr)
-		return nullptr;
-	else
-		return static_cast<NestedEnv*>(_outer)->where(name);
-}
 void NestedEnv::put(const std::string& name, const Value& value)
 {
 	//获取该变量名所处的环境

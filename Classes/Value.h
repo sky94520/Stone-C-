@@ -13,6 +13,7 @@
 NS_STONE_BEGIN
 
 class Value;
+class Function;
 
 typedef std::vector<Value> ValueVector;
 typedef std::unordered_map<std::string, Value> ValueMap;
@@ -32,6 +33,7 @@ public:
 		DOUBLE,
 		BOOLEAN,
 		STRING,
+		FUNCTION,
 		VECTOR,
 		MAP,
 		INT_KEY_MAP
@@ -46,6 +48,7 @@ private:
 		double doubleVal;
 		bool boolVal;
 		std::string* stringVal;
+		Function* functionVal;
 		ValueVector* vectorVal;
 		ValueMap* mapVal;
 		ValueMapIntKey* intKeyMapVal;
@@ -59,6 +62,7 @@ public:
 	explicit Value(bool v);
 	explicit Value(const char* v);
 	explicit Value(const std::string& v);
+	explicit Value(Function* function);
 	explicit Value(const ValueVector& v);
 	explicit Value(const ValueMap& v);
 	explicit Value(const ValueMapIntKey& v);
@@ -75,6 +79,7 @@ public:
 	Value& operator=(bool v);
 	Value& operator=(const char* v);
 	Value& operator=(const std::string& v);
+	Value& operator=(Function* func);
 	Value& operator=(const ValueVector& v);
 	Value& operator=(const ValueMap& v);
 	Value& operator=(const ValueMapIntKey& v);
@@ -88,6 +93,7 @@ public:
 	double asDouble()const;
 	bool asBool()const;
 	std::string asString()const;
+	Function* asFunction() const;
 	ValueVector &asValueVector()const;
 	ValueMap &asValueMap()const;
 	ValueMapIntKey &asValueIntKey()const;

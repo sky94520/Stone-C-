@@ -56,7 +56,7 @@ public:
 	void setLexer(Lexer* lexer);
 
 	//program: [statement] (";" | EOL)
-	ASTree* program();
+	virtual ASTree* program();
 
 	/*
 		statement: "if" expr block ["else" block]
@@ -66,7 +66,7 @@ public:
 	ASTree* statement();
 
 	//simple: expr
-	ASTree* simple();
+	virtual ASTree* simple();
 
 	//block "{" [statement] {(";" | EOL) [statement]} "}"
 	ASTree* block();
@@ -78,7 +78,7 @@ public:
 	ASTree* factor();
 
 	//primary: "(" expression ")" | NUMBER | IDENTIFIER | STRING
-	ASTree* primary();
+	virtual ASTree* primary();
 protected:
 	ASTree* doShift(ASTree* left, int prec);
 	Precedence* nextOperator();
@@ -88,7 +88,7 @@ protected:
 	//如果名称相同，则返回该单词，否则返回nullptr
 	void token(const std::string& name);
 	bool isToken(const std::string& name);
-private:
+protected:
 	//操作符
 	Operators _operators;
 	//保留字符

@@ -4,15 +4,17 @@
 #include <string>
 #include <vector>
 
-#include "StoneMarcos.h"
+#include "StObject.h"
 
 NS_STONE_BEGIN
 
 class Visitor;
 class Environment;
 
-class ASTree {
+class ASTree: public Object
+{
 public:
+	ASTree() {}
 	virtual ~ASTree(){ }
 public:
 	virtual void accept(Visitor* v, Environment* env);
@@ -23,6 +25,5 @@ public:
 	virtual std::vector<ASTree*>::iterator end() = 0;
 	virtual std::string toString() const = 0;
 };
-
 NS_STONE_END
 #endif

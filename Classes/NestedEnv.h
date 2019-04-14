@@ -16,12 +16,11 @@ public:
 
 	void setOuter(Environment* env);
 	
-	//直接在本环境中添加/更新变量
-	void putNew(const std::string& name, const Value& value);
-	
 	//查找包含该变量名字所对应的环境并返回该环境
 	Environment* where(const std::string& name);
 
+	//直接在本环境中添加/更新变量
+	virtual void putNew(const std::string& name, const Value& value);
 	virtual void put(const std::string& name, const Value& value);
 	virtual const Value* get(const std::string& name) const;
 private:

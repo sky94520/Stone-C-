@@ -52,7 +52,7 @@ int main() {
 				//¼ÆËã
 				t->accept(visitor, env);
 				cout << t->toString() << "=>" << visitor->result.asString() << endl;
-				delete t;
+				t->release();
 			}
 		}
 	}

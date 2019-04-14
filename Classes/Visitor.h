@@ -19,6 +19,12 @@ class BlockStmnt;
 class IfStmnt;
 class WhileStmnt;
 
+class PrimaryExpr;
+class Postfix;
+class Arguments;
+class ParameterList;
+class DefStmnt;
+
 class Visitor
 {
 public:
@@ -33,6 +39,12 @@ public:
 	virtual void visit(BlockStmnt* t, Environment* env) = 0;
 	virtual void visit(IfStmnt* t, Environment* env) = 0;
 	virtual void visit(WhileStmnt* t, Environment* env) = 0;
+	
+	//º¯ÊýÏà¹Ø
+	virtual void visit(PrimaryExpr* t, Environment* env) = 0;
+	virtual void visit(Postfix* t, Environment* env) = 0;
+	virtual void visit(Arguments* t, Environment* env) = 0;
+	virtual void visit(DefStmnt* t, Environment* env) = 0;
 };
 
 NS_STONE_END

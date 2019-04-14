@@ -1,0 +1,27 @@
+#ifndef __Stone_ParameterList_H__
+#define __Stone_ParameterList_H__
+
+#include <vector>
+#include <string>
+
+#include "ASTList.h"
+
+NS_STONE_BEGIN
+
+class Visitor;
+class Environment;
+
+class ParameterList : public ASTList
+{
+public:
+	ParameterList();
+	ParameterList(const std::vector<ASTree*>& list);
+	virtual ~ParameterList();
+	
+	const std::string getName(unsigned i) const;
+	int getSize() const;
+public:
+	virtual void accept(Visitor* v, Environment* env);
+};
+NS_STONE_END
+#endif

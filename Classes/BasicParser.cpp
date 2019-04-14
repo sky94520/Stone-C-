@@ -95,11 +95,8 @@ ASTree* BasicParser::program()
 		ret = true;
 	}
 
-	if (ret)
-	{
-	}
 	//没有分号或者换行，则出错
-	else
+	if (!ret)
 		throw ParseException("} expected.", _lexer->peek(0));
 	return n;
 }

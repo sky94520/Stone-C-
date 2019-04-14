@@ -1,4 +1,6 @@
 #include "Value.h"
+#include "Function.h"
+#include "StoneException.h"
 NS_STONE_BEGIN
 
 const Value Value::Null;
@@ -8,76 +10,95 @@ Value::Value()
 {
 	memset(&_field, 0, sizeof(_field));
 }
+
 Value::Value(unsigned char v)
 	: _type(Type::BYTE)
 {
 	_field.byteVal = v;
 }
+
 Value::Value(int v)
 	: _type(Type::INTEGER)
 {
 	_field.intVal = v;
 }
+
 Value::Value(float v)
 	: _type(Type::FLOAT)
 {
 	_field.floatVal = v;
 }
+
 Value::Value(double v)
 	: _type(Type::DOUBLE)
 {
-	//_field.floatVal = (float)v;
 	_field.doubleVal = v;
 }
+
 Value::Value(bool v)
 	: _type(Type::BOOLEAN)
 {
 	_field.boolVal = v;
 }
-Value::Value(const char*v)
+
+Value::Value(const char* v)
 	: _type(Type::STRING)
 {
 	_field.stringVal = new std::string();
-	if (v)
+	if (v != nullptr)
 	{
 		*_field.stringVal = v;
 	}
 }
-Value::Value(const std::string&v)
+
+Value::Value(const std::string& v)
 	:_type(Type::STRING)
 {
 	_field.stringVal = new std::string();
 	*_field.stringVal = v;
 }
-Value::Value(const ValueVector&v)
+
+Value::Value(Function* function)
+	:_type(Type::FUNCTION)
+{
+	function->retain();
+	_field.functionVal = function;
+}
+
+Value::Value(const ValueVector& v)
 	: _type(Type::VECTOR)
 {
 	_field.vectorVal = new ValueVector();
 	*_field.vectorVal = v;
 }
-Value::Value(const ValueMap&v)
+
+Value::Value(const ValueMap& v)
 	: _type(Type::MAP)
 {
 	_field.mapVal = new ValueMap();
 	*_field.mapVal = v;
 }
-Value::Value(const ValueMapIntKey&v)
+
+Value::Value(const ValueMapIntKey& v)
 	: _type(Type::INT_KEY_MAP)
 {
 	_field.intKeyMapVal = new ValueMapIntKey();
 	*_field.intKeyMapVal = v;
 }
-Value::Value(const Value&v)
+
+Value::Value(const Value& v)
 	: _type(Type::NONE)
 {
 	*this = v;
 }
+
 Value::~Value()
 {
 	clear();
 }
+
 //operator
-Value& Value::operator=(const Value&v)
+Value& Value::operator=(const Value& v)
 {
 	//如果两地址相同，直接返回
 	if (this == &v)
@@ -99,6 +120,13 @@ Value& Value::operator=(const Value&v)
 
 		*_field.stringVal = v._field.stringVal->c_str();
 	}; break;
+	case Type::FUNCTION:
+	{
+		v.asFunction()->retain();
+		if (_field.functionVal != nullptr)
+			_field.functionVal->release();
+		_field.functionVal = v.asFunction();
+	}break;
 	case Type::VECTOR:
 	{
 		if (_field.vectorVal == nullptr)
@@ -121,67 +149,91 @@ Value& Value::operator=(const Value&v)
 	}
 	return *this;
 }
+
 Value& Value::operator=(unsigned char v)
 {
 	reset(Type::BYTE);
 	_field.byteVal = v;
 	return *this;
 }
+
 Value& Value::operator=(int v)
 {
 	reset(Type::INTEGER);
 	_field.intVal = v;
 	return *this;
 }
+
 Value& Value::operator=(float v)
 {
 	reset(Type::FLOAT);
 	_field.floatVal = v;
 	return *this;
 }
+
 Value& Value::operator=(double v)
 {
 	reset(Type::DOUBLE);
 	_field.doubleVal = v;
 	return *this;
 }
+
 Value& Value::operator=(bool v)
 {
 	reset(Type::BYTE);
 	_field.byteVal = v;
 	return *this;
 }
-Value& Value::operator=(const char*v)
+
+Value& Value::operator=(const char* v)
 {
 	reset(Type::STRING);
 	*_field.stringVal = v;
 	return *this;
 }
-Value& Value::operator=(const std::string&v)
+
+Value& Value::operator=(const std::string& v)
 {
 	reset(Type::STRING);
 	*_field.stringVal = v;
 	return *this;
 }
-Value& Value::operator=(const ValueVector&v)
+
+Value& Value::operator=(Function* func)
+{
+	//原先为function
+	if (_type == Type::FUNCTION && _field.functionVal != nullptr)
+		_field.functionVal->release();
+
+	reset(Type::FUNCTION);
+	func->retain();
+	_field.functionVal = func;
+
+	return *this;
+}
+
+Value& Value::operator=(const ValueVector& v)
 {
 	reset(Type::VECTOR);
 	*_field.vectorVal = v;
 	return *this;
 }
-Value& Value::operator=(const ValueMap&v)
+
+Value& Value::operator=(const ValueMap& v)
 {
 	reset(Type::MAP);
 	*_field.mapVal = v;
 	return *this;
 }
-Value& Value::operator=(const ValueMapIntKey&v)
+
+Value& Value::operator=(const ValueMapIntKey& v)
 {
 	reset(Type::INT_KEY_MAP);
 	*_field.intKeyMapVal = v;
 	return *this;
 }
-bool Value::operator==(const Value&v)const
+
+bool Value::operator==(const Value& v)const
 {
 	if (this == &v)
 		return true;
@@ -195,6 +247,9 @@ bool Value::operator==(const Value&v)const
 	case Type::DOUBLE:return _field.doubleVal == v._field.doubleVal; break;
 	case Type::BOOLEAN:return _field.boolVal == v._field.boolVal; break;
 	case Type::STRING:return *_field.stringVal == *v._field.stringVal; break;
+	case Type::FUNCTION: 
+		return _field.functionVal == v._field.functionVal; 
+		break;
 	case Type::VECTOR:return *_field.vectorVal == *v._field.vectorVal; break;
 	case Type::MAP:return *_field.mapVal == *v._field.mapVal; break;
 	case Type::INT_KEY_MAP:return *_field.intKeyMapVal == *v._field.intKeyMapVal; break;
@@ -202,7 +257,8 @@ bool Value::operator==(const Value&v)const
 	}
 	return false;
 }
-bool Value::operator!=(const Value&v)
+
+bool Value::operator!=(const Value& v)
 {
 	if (this == &v)
 		return false;
@@ -216,6 +272,9 @@ bool Value::operator!=(const Value&v)
 	case Type::DOUBLE:return _field.doubleVal != v._field.doubleVal; break;
 	case Type::BOOLEAN:return _field.boolVal != v._field.boolVal; break;
 	case Type::STRING:return *_field.stringVal != *v._field.stringVal; break;
+	case Type::FUNCTION:
+		return _field.functionVal != v._field.functionVal;
+		break;
 	case Type::VECTOR:return *_field.vectorVal != *v._field.vectorVal; break;
 	case Type::MAP:return *_field.mapVal != *v._field.mapVal; break;
 	case Type::INT_KEY_MAP:return *_field.intKeyMapVal != *v._field.intKeyMapVal; break;
@@ -224,7 +283,8 @@ bool Value::operator!=(const Value&v)
 	}
 	return true;
 }
-unsigned char Value::asByte()const
+
+unsigned char Value::asByte() const
 {
 	//无法转换
 	if (_type == Type::VECTOR)
@@ -242,6 +302,7 @@ unsigned char Value::asByte()const
 	}
 	return 0;
 }
+
 int Value::asInt()const
 {
 	//无法转换
@@ -259,6 +320,7 @@ int Value::asInt()const
 	}
 	return 0;
 }
+
 float Value::asFloat()const
 {
 	//无法转换
@@ -276,6 +338,7 @@ float Value::asFloat()const
 	}
 	return 0.f;
 }
+
 double Value::asDouble()const
 {
 	//无法转换
@@ -293,7 +356,8 @@ double Value::asDouble()const
 	}
 	return 0.0;
 }
-bool Value::asBool()const
+
+bool Value::asBool() const
 {
 	bool ret = false;
 	//无法转换
@@ -324,6 +388,7 @@ bool Value::asBool()const
 	}
 	return ret;
 }
+
 std::string Value::asString()const
 {
 	//无法转换
@@ -353,21 +418,34 @@ std::string Value::asString()const
 	}
 	return ret.str();
 }
+
+Function* Value::asFunction() const
+{
+	if (_type != Type::FUNCTION)
+		throw StoneException("the type is not function");
+	return _field.functionVal;
+}
+
 ValueVector &Value::asValueVector()const
 {
-	//TODO:SDLASSERT(_type == Type::VECTOR, "type不是VECTOR");
+	if (_type != Type::VECTOR)
+		throw StoneException("the type is not vector");
 	return *_field.vectorVal;
 }
+
 ValueMap &Value::asValueMap()const
 {
-	//TODO:SDLASSERT(_type == Type::MAP, "type不是MAP");
+	if (_type != Type::VECTOR)
+		throw StoneException("the type is not map");
 	return *_field.mapVal;
 }
+
 ValueMapIntKey &Value::asValueIntKey()const
 {
 	//TODO:SDLASSERT(_type == Type::INT_KEY_MAP, "type不是INT_KEY_MAP");
 	return *_field.intKeyMapVal;
 }
+
 void Value::clear()
 {
 	switch (_type)
@@ -378,6 +456,10 @@ void Value::clear()
 	case Type::DOUBLE:_field.doubleVal = 0.0; break;
 	case Type::BOOLEAN:_field.boolVal = false; break;
 	case Type::STRING:STONE_SAFE_DELETE(_field.stringVal); break;
+	case Type::FUNCTION: 
+		if (_field.functionVal != nullptr)
+			_field.functionVal->release();
+		break;
 	case Type::VECTOR:STONE_SAFE_DELETE(_field.vectorVal); break;
 	case Type::MAP:STONE_SAFE_DELETE(_field.mapVal); break;
 	case Type::INT_KEY_MAP:STONE_SAFE_DELETE(_field.intKeyMapVal); break;
@@ -386,6 +468,7 @@ void Value::clear()
 	memset(&_field, 0, sizeof(_field));
 	_type = Type::NONE;
 }
+
 void Value::reset(Type type)
 {
 	if (_type == type)

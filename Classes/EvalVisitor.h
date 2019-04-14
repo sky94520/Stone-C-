@@ -21,6 +21,12 @@ class BlockStmnt;
 class IfStmnt;
 class WhileStmnt;
 
+class PrimaryExpr;
+class Postfix;
+class Arguments;
+class ParameterList;
+class DefStmnt;
+
 class EvalVisitor : public Visitor 
 {
 public:
@@ -37,10 +43,21 @@ public:
 	virtual void visit(BlockStmnt* t, Environment* env);
 	virtual void visit(IfStmnt* t, Environment* env);
 	virtual void visit(WhileStmnt* t, Environment* env);
+
+	//函数相关
+	virtual void visit(PrimaryExpr* t, Environment* env);
+	virtual void visit(Postfix* t, Environment* env);
+	virtual void visit(Arguments* t, Environment* env);
+	virtual void visit(ParameterList* t, Environment* env, unsigned index);
+	virtual void visit(DefStmnt* t, Environment* env);
 private:
+	//BinaryExpr
 	Value computeOp(ASTree* t, const Value& left, const std::string& op, const Value& right);
 	//TODO: 暂时为整数
 	int computeNumber(ASTree* t, int left, const std::string& op, int right);
+
+	//PrimaryExpr
+	void evalSubExpr(PrimaryExpr* t, Environment* env, int nest);
 };
 NS_STONE_END
 #endif // ! __Stone_EvalVisitor_H__
