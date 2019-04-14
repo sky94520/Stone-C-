@@ -21,8 +21,11 @@ public:
 public:
 	virtual void accept(Visitor* v, Environment* env);
 
+	//获取左操作树
 	ASTree* getLeft() const;
+	//获取操作符
 	std::string getOperator() const;
+	//获取右操作树
 	ASTree* getRight() const;
 };
 

@@ -35,6 +35,7 @@ void EvalVisitor::visit(ASTLeaf* t, Environment* env)
 
 void EvalVisitor::visit(NumberLiteral* t, Environment* env)
 {
+	//暂时只支持整型
 	result = t->getToken()->asInt();
 }
 
@@ -61,14 +62,17 @@ void EvalVisitor::visit(Name* t, Environment* env)
 
 void EvalVisitor::visit(NegativeExpr* t, Environment* env)
 {
+	//计算操作数
 	t->getOperand()->accept(this, env);
-	//TODO:只有数字才能使用负号
+	//TODO:只有整型才能使用负号
 	if (this->result.getType() == Value::Type::INTEGER)
 	{
 		this->result = Value(-this->result.asInt());
 	}
 	else
+	{
 		throw StoneException("bad type for -", t);
+	}
 }
 
 void EvalVisitor::visit(BinaryExpr* t, Environment* env)
@@ -87,18 +91,20 @@ void EvalVisitor::visit(BinaryExpr* t, Environment* env)
 		if (left == nullptr)
 			throw StoneException("bad assignment", t);
 		//添加到环境中
-		env->put(left->getName(), this->result);
+		env->put(left->getName(), right);
 	}
 	else
 	{
+		//计算左值
 		t->getLeft()->accept(this, env);
 		Value left = this->result;
-
+		//计算右值
 		t->getRight()->accept(this, env);
 		Value right = this->result;
+
 		//计算值
 		Value value = this->computeOp(t, left, op, right);
-		//暂存值
+		//保存值
 		this->result = value;
 	}
 }
@@ -115,14 +121,15 @@ void EvalVisitor::visit(BlockStmnt* t, Environment* env)
 
 void EvalVisitor::visit(IfStmnt* t, Environment* env)
 {
-	//获取当前的条件语句
+	//获取当前的条件语句的个数
 	unsigned int size = t->getIfNumber();
 
 	//遍历if {elseif}
 	for (unsigned int i = 0; i < size; i++)
 	{
+		//判断条件语句
 		t->getCondition(i)->accept(this, env);
-		//判断返回值
+		//判断返回值为true,则执行该语句块，并退出
 		if (this->result.asBool())
 		{
 			t->getThenBlock(i)->accept(this, env);
@@ -141,8 +148,9 @@ void EvalVisitor::visit(WhileStmnt* t, Environment* env)
 	Value value;
 	do 
 	{
-		//判断条件
+		//条件判断
 		t->getCondition()->accept(this, env);
+		//不满足条件则退出
 		if (!this->result.asBool())
 			break;
 		//执行语句
@@ -156,7 +164,7 @@ void EvalVisitor::visit(WhileStmnt* t, Environment* env)
 
 void EvalVisitor::visit(PrimaryExpr* t, Environment* env)
 {
-	//Name {Arguments}
+	//Name {Arguments}, 可执行类似于 fib(2)(3)等
 	this->evalSubExpr(t, env, 0);
 }
 
@@ -169,9 +177,13 @@ void EvalVisitor::visit(Arguments* t, Environment* env)
 	Function* function = this->result.asFunction();
 	//获取function需要的参数列表
 	ParameterList* params = function->getParameters();
+	//函数体
+	BlockStmnt* body = function->getBody();
 
+	//个数不同，函数调用失败
 	if (t->getSize() != params->getSize())
 		throw StoneException("bad number of arguments", t);
+
 	//创建一个新的环境
 	Environment* newEnv = function->makeEnv();
 	//放入参数和对应的值
@@ -180,18 +192,13 @@ void EvalVisitor::visit(Arguments* t, Environment* env)
 		auto args = t->getChild(i);
 		//先计算
 		args->accept(this, env);
-		//调用
-		this->visit(params, newEnv, i);
+		//添加变量到环境中
+		newEnv->putNew(params->getName(i), this->result);
 	}
 	//执行函数体
-	this->visit(function->getBody(), newEnv);
-
+	body->accept(this, newEnv);
+	//释放环境
 	newEnv->release();
-}
-
-void EvalVisitor::visit(ParameterList* t, Environment* env, unsigned index)
-{
-	env->putNew(t->getName(index), this->result);
 }
 
 void EvalVisitor::visit(DefStmnt* t, Environment* env)
@@ -199,6 +206,7 @@ void EvalVisitor::visit(DefStmnt* t, Environment* env)
 	//直接在本环境下添加Function对象
 	Function* function = new Function(t->getParameters(), t->getBody(), env);
 	Value value = Value(function);
+
 	env->putNew(t->getName(), value);
 	this->result = t->getName();
 
@@ -209,6 +217,7 @@ void EvalVisitor::visit(DefStmnt* t, Environment* env)
 Value EvalVisitor::computeOp(ASTree* t, const Value& left, const std::string& op, const Value& right)
 {
 	Value value;
+	//TODO:目前仅支持整型
 	if (left.getType() == Value::Type::INTEGER && right.getType() == Value::Type::INTEGER)
 	{
 		value = this->computeNumber(t, left.asInt(), op, right.asInt());
@@ -220,10 +229,12 @@ Value EvalVisitor::computeOp(ASTree* t, const Value& left, const std::string& op
 	}
 	else if ("==" == op)
 	{
-		value = Value(left == right ? true : false);
+		value = Value(left == right ? true: false);
 	}
 	else
+	{
 		throw StoneException("bad type", t);
+	}
 
 	return value;
 }
@@ -249,6 +260,7 @@ int EvalVisitor::computeNumber(ASTree* t, int left, const std::string& op, int r
 	else
 		throw StoneException("bad operator", t);
 }
+
 //---------------------------PrimaryExpr---------------------
 void EvalVisitor::evalSubExpr(PrimaryExpr* t, Environment* env, int nest)
 {
@@ -256,16 +268,16 @@ void EvalVisitor::evalSubExpr(PrimaryExpr* t, Environment* env, int nest)
 	if (t->getNumChildren() - nest > 1)
 	{
 		this->evalSubExpr(t, env, nest + 1);
-		//TODO:目前先强制转换为Arguments
+		//获取实参
 		auto postfix = t->getChild(t->getNumChildren() - nest - 1);
 		//调用Arguments,即调用函数 这里的函数已经在this->result之中
 		postfix->accept(this, env);
 	}
-	//返回名字对应的函数，并放入this->result之中
 	else
 	{
-		auto name = static_cast<Name*>(t->getChild(0));
-		this->visit(name, env);
+		//返回名字对应的函数，并放入this->result之中
+		auto name = t->getChild(0);
+		name->accept(this, env);
 	}
 }
 NS_STONE_END

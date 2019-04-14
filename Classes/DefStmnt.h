@@ -20,8 +20,11 @@ public:
 	DefStmnt(const std::vector<ASTree*>& list);
 	virtual ~DefStmnt();
 
+	//获取函数名字
 	std::string getName() const;
+	//获取函数参数列表
 	ParameterList* getParameters() const;
+	//获取函数体
 	BlockStmnt* getBody() const;
 public:
 	virtual void accept(Visitor* v, Environment* env);

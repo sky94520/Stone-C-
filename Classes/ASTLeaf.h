@@ -11,7 +11,8 @@ class Token;
 class Visitor;
 class Environment;
 
-class ASTLeaf : public ASTree {
+class ASTLeaf : public ASTree 
+{
 public:
 	ASTLeaf(Token* token);
 	virtual ~ASTLeaf();
