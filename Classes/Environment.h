@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "StObject.h"
+#include "STObject.h"
 #include "Value.h"
 
 NS_STONE_BEGIN

@@ -24,6 +24,7 @@ class Postfix;
 class Arguments;
 class ParameterList;
 class DefStmnt;
+class ClosureStmnt;
 
 class Visitor
 {
@@ -45,6 +46,9 @@ public:
 	virtual void visit(Postfix* t, Environment* env) = 0;
 	virtual void visit(Arguments* t, Environment* env) = 0;
 	virtual void visit(DefStmnt* t, Environment* env) = 0;
+
+	//±Õ°üº¯Êý
+	virtual void visit(ClosureStmnt* t, Environment* env) = 0;
 };
 
 NS_STONE_END

@@ -26,6 +26,7 @@ class Postfix;
 class Arguments;
 class ParameterList;
 class DefStmnt;
+class ClosureStmnt;
 
 class EvalVisitor : public Visitor 
 {
@@ -63,6 +64,8 @@ public:
 	virtual void visit(Arguments* t, Environment* env);
 	//函数定义，会添加函数到环境中，并把函数名放在result中
 	virtual void visit(DefStmnt* t, Environment* env);
+
+	virtual void visit(ClosureStmnt* t, Environment* env);
 private:
 	//------BinaryExpr----
 	Value computeOp(ASTree* t, const Value& left, const std::string& op, const Value& right);

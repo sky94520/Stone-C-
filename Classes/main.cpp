@@ -15,6 +15,7 @@
 #include "StoneException.h"
 #include "NestedEnv.h"
 #include "EvalVisitor.h"
+#include "STAutoreleasePool.h"
 
 using namespace std;
 USING_NS_STONE;
@@ -54,6 +55,7 @@ int main() {
 				cout << t->toString() << "=>" << visitor->result.asString() << endl;
 				t->release();
 			}
+			AutoreleasePool::getInstance()->clear();
 		}
 	}
 	catch (ParseException& e)
@@ -70,6 +72,7 @@ int main() {
 	delete parser;
 	delete lexer;
 	delete Token::TOKEN_EOF;
+	AutoreleasePool::purge();
 
 	return 0;
 }

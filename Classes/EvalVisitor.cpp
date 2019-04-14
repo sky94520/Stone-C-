@@ -19,6 +19,9 @@
 #include "ParameterList.h"
 #include "DefStmnt.h"
 #include "Function.h"
+#include "ClosureStmnt.h"
+#include "STAutoreleasePool.h"
+#include "STObject.h"
 
 NS_STONE_BEGIN
 void EvalVisitor::visit(ASTree* t, Environment* env)
@@ -211,6 +214,13 @@ void EvalVisitor::visit(DefStmnt* t, Environment* env)
 	this->result = t->getName();
 
 	function->release();
+}
+
+void EvalVisitor::visit(ClosureStmnt* t, Environment* env)
+{
+	Function* closure = new Function(t->getParameters(), t->getBody(), env);
+	closure->autorelease();
+	this->result = closure;
 }
 
 //---------------------------------BinaryExpr---------------------------
