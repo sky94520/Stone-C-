@@ -8,6 +8,7 @@
 
 #include "Lexer.h"
 #include "Token.h"
+#include "Value.h"
 #include "Parser.h"
 #include "ASTree.h"
 #include "ASTLeaf.h"
@@ -22,6 +23,7 @@ USING_NS_STONE;
 
 std::unique_ptr<char> getUniqueDataFromFile(const std::string& filename);
 void outputLexer(Lexer* lexer);
+Value print(Environment* env);
 
 int main() {
 	auto uniquePtr = std::move(getUniqueDataFromFile("1.txt"));
@@ -37,6 +39,9 @@ int main() {
 	parser->setLexer(lexer);
 	//创建环境
 	NestedEnv* env = new NestedEnv();
+	//加入方法
+	const char* params[] = { "value" };
+	env->putNative("print", print, params, 1);
 	//创建解析器
 	EvalVisitor* visitor = new EvalVisitor();
 
@@ -122,4 +127,13 @@ std::unique_ptr<char> getUniqueDataFromFile(const std::string& filename) {
 
 	points = std::unique_ptr<char>(buffer);
 	return points;
+}
+
+Value print(Environment* env)
+{
+	//获取参数
+	const Value* value = env->get("value");
+	std::cout << value->asString() << std::endl;
+
+	return *value;
 }

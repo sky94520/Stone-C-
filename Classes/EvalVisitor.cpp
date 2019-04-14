@@ -22,6 +22,7 @@
 #include "ClosureStmnt.h"
 #include "STAutoreleasePool.h"
 #include "STObject.h"
+#include "ScriptFunction.h"
 
 NS_STONE_BEGIN
 void EvalVisitor::visit(ASTree* t, Environment* env)
@@ -178,13 +179,8 @@ void EvalVisitor::visit(Postfix* t, Environment* env)
 void EvalVisitor::visit(Arguments* t, Environment* env)
 {
 	Function* function = this->result.asFunction();
-	//获取function需要的参数列表
-	ParameterList* params = function->getParameters();
-	//函数体
-	BlockStmnt* body = function->getBody();
-
 	//个数不同，函数调用失败
-	if (t->getSize() != params->getSize())
+	if (t->getSize() != function->getParamSize())
 		throw StoneException("bad number of arguments", t);
 
 	//创建一个新的环境
@@ -196,10 +192,10 @@ void EvalVisitor::visit(Arguments* t, Environment* env)
 		//先计算
 		args->accept(this, env);
 		//添加变量到环境中
-		newEnv->putNew(params->getName(i), this->result);
+		newEnv->putNew(function->getParamName(i), this->result);
 	}
 	//执行函数体
-	body->accept(this, newEnv);
+	function->execute(this, newEnv);
 	//释放环境
 	newEnv->release();
 }
@@ -207,7 +203,7 @@ void EvalVisitor::visit(Arguments* t, Environment* env)
 void EvalVisitor::visit(DefStmnt* t, Environment* env)
 {
 	//直接在本环境下添加Function对象
-	Function* function = new Function(t->getParameters(), t->getBody(), env);
+	Function* function = new ScriptFunction(t->getParameters(), t->getBody(), env);
 	Value value = Value(function);
 
 	env->putNew(t->getName(), value);
@@ -218,7 +214,7 @@ void EvalVisitor::visit(DefStmnt* t, Environment* env)
 
 void EvalVisitor::visit(ClosureStmnt* t, Environment* env)
 {
-	Function* closure = new Function(t->getParameters(), t->getBody(), env);
+	Function* closure = new ScriptFunction(t->getParameters(), t->getBody(), env);
 	closure->autorelease();
 	this->result = closure;
 }

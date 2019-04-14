@@ -5,6 +5,7 @@
 
 #include "STObject.h"
 #include "Value.h"
+#include "NativeFunction.h"
 
 NS_STONE_BEGIN
 
@@ -16,6 +17,13 @@ public:
 	virtual void putNew(const std::string& name, const Value& value) = 0;
 	//插入数据
 	virtual void put(const std::string& name, const Value& value) = 0;
+
+	void putNative(const std::string& name, const nativeFunc& callback, const char** params, int len)
+	{
+		NativeFunction* function = new NativeFunction(params, len, callback, this);
+		this->putNew(name, Value(function));
+		function->release();
+	}
 	//获取数据
 	virtual const Value* get(const std::string& name) const = 0;
 };
