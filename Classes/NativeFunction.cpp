@@ -8,7 +8,7 @@ NativeFunction::NativeFunction(const char* params[], int len, const nativeFunc& 
 	,_paramNum(len)
 	,_callback(callback)
 {
-	unsigned i = 0;
+	int i = 0;
 	while (i < len)
 		_parameters.push_back(params[i++]);
 }
@@ -29,6 +29,7 @@ std::string NativeFunction::getParamName(unsigned index) const
 
 void NativeFunction::execute(Visitor* v, Environment* env)
 {
-	static_cast<EvalVisitor*>(v)->result = _callback(env);
+	Value value = _callback(env);
+	static_cast<EvalVisitor*>(v)->setResult(value);
 }
 NS_STONE_END

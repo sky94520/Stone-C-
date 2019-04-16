@@ -3,12 +3,13 @@
 #include "Lexer.h"
 #include "Token.h"
 #include "ClosureParser.h"
+#include "ArrayParser.h"
 
 NS_STONE_BEGIN
 
 Parser::Parser()
 {
-	_parser = new ClosureParser();
+	_parser = new ArrayParser();
 	//Ìí¼Ó±£Áô×Ö·û
 	_parser->addReservedWord(";");
 	_parser->addReservedWord("}");

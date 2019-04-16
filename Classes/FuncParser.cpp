@@ -62,11 +62,11 @@ ASTree* FuncParser::primary()
 	std::vector<ASTree*> list;
 
 	//存在 {postfix}
-	if (isToken("("))
+	if (isHasPostfix())
 	{
 		list.push_back(primary);
 
-		while (isToken("("))
+		while (isHasPostfix())
 		{
 			list.push_back(this->postfix());
 		}
@@ -78,8 +78,8 @@ ASTree* FuncParser::primary()
 
 ASTree* FuncParser::postfix()
 {
+	//postfix: "(" [args] ")"
 	ASTree* t = nullptr;
-	//"(" [args] ")"
 	this->token("(");
 
 	//无论有无都生成一个Arguments
@@ -95,16 +95,26 @@ ASTree* FuncParser::postfix()
 	return t;
 }
 
+bool FuncParser::isHasPostfix()
+{
+	return isToken("(");
+}
+
 //args: expr {"," expr}
 ASTree* FuncParser::args()
 {
 	std::vector<ASTree*> list;
-	list.push_back(BasicParser::expression());
+
+	ASTree* expr = BasicParser::expression();
+	if (expr != nullptr)
+		list.push_back(expr);
 
 	while (isToken(","))
 	{
 		token(",");
-		list.push_back(BasicParser::expression());
+		expr = BasicParser::expression();
+		if (expr != nullptr)
+			list.push_back(expr);
 	}
 
 	return new Arguments(list);

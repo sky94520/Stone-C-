@@ -26,6 +26,9 @@ class ParameterList;
 class DefStmnt;
 class ClosureStmnt;
 
+class ArrayLiteral;
+class ArrayRef;
+
 class Visitor
 {
 public:
@@ -49,6 +52,10 @@ public:
 
 	//闭包函数
 	virtual void visit(ClosureStmnt* t, Environment* env) = 0;
+
+	//数组
+	virtual void visit(ArrayLiteral* t, Environment* env) = 0;
+	virtual void visit(ArrayRef* t, Environment* env) = 0;
 };
 
 NS_STONE_END

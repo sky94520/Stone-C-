@@ -57,7 +57,7 @@ int main() {
 			{
 				//¼ÆËã
 				t->accept(visitor, env);
-				cout << t->toString() << "=>" << visitor->result.asString() << endl;
+				cout << t->toString() << "=>" << visitor->result->asString() << endl;
 				t->release();
 			}
 			AutoreleasePool::getInstance()->clear();

@@ -20,7 +20,9 @@ public:
 	virtual ASTree* primary();
 
 	//"(" [args] ")"
-	ASTree* postfix();
+	virtual ASTree* postfix();
+	//ÊÇ·ñ»¹ÓÐpostfix
+	virtual bool isHasPostfix();
 
 	//args: expr {"," expr}
 	ASTree* args();

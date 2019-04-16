@@ -14,6 +14,7 @@ Arguments::Arguments(const std::vector<ASTree*>& list)
 Arguments::~Arguments()
 {
 }
+
 unsigned Arguments::getSize() const
 {
 	return getNumChildren();

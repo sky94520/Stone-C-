@@ -31,7 +31,8 @@ class ClosureStmnt;
 class EvalVisitor : public Visitor 
 {
 public:
-	Value result;
+	EvalVisitor();
+	virtual ~EvalVisitor();
 public:
 	//以下三个函数不会调用到
 	virtual void visit(ASTree* t, Environment* env);
@@ -66,6 +67,17 @@ public:
 	virtual void visit(DefStmnt* t, Environment* env);
 
 	virtual void visit(ClosureStmnt* t, Environment* env);
+
+	//数组
+	virtual void visit(ArrayLiteral* t, Environment* env);
+	virtual void visit(ArrayRef* t, Environment* env);
+public:
+	void setResult(int value);
+	void setResult(const std::string& value);
+	void setResult(const std::vector<Value>& value);
+	void setResult(Function* value);
+	void setResult(const Value& value);
+	void setResult(Value* value);
 private:
 	//------BinaryExpr----
 	Value computeOp(ASTree* t, const Value& left, const std::string& op, const Value& right);
@@ -74,6 +86,11 @@ private:
 
 	//------PrimaryExpr-----
 	void evalSubExpr(PrimaryExpr* t, Environment* env, int nest);
+
+public:
+	Value* result;
+private:
+	bool _allocated;
 };
 NS_STONE_END
 #endif // ! __Stone_EvalVisitor_H__

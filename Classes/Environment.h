@@ -26,6 +26,7 @@ public:
 	}
 	//获取数据
 	virtual const Value* get(const std::string& name) const = 0;
+	virtual Value* get(const std::string& name) = 0;
 };
 NS_STONE_END
 #endif
