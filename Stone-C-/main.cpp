@@ -6,17 +6,17 @@
 #include <memory>
 #include <sstream>
 
-#include "Lexer.h"
-#include "Token.h"
-#include "Value.h"
-#include "Parser.h"
-#include "ASTree.h"
-#include "ASTLeaf.h"
-#include "ParseException.h"
-#include "StoneException.h"
-#include "NestedEnv.h"
-#include "EvalVisitor.h"
-#include "STAutoreleasePool.h"
+#include "../Classes/Lexer.h"
+#include "../Classes/Token.h"
+#include "../Classes/Value.h"
+#include "../Classes/Parser.h"
+#include "../Classes/ASTree.h"
+#include "../Classes/ASTLeaf.h"
+#include "../Classes/ParseException.h"
+#include "../Classes/StoneException.h"
+#include "../Classes/NestedEnv.h"
+#include "../Classes/EvalVisitor.h"
+#include "../Classes/STAutoreleasePool.h"
 
 using namespace std;
 USING_NS_STONE;
