@@ -1,7 +1,9 @@
 .vs
 Debug/**
 Stone.sln
-Stone/Debug/**
+**/Debug/**
 Stone/Stone.*
 Stone/Release
-Release
+**/Release
+*.sln
+*.vcxproj*
