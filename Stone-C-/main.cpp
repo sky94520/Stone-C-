@@ -9,7 +9,6 @@
 #include "../Classes/Lexer.h"
 #include "../Classes/Token.h"
 #include "../Classes/Value.h"
-#include "../Classes/Parser.h"
 #include "../Classes/ASTree.h"
 #include "../Classes/ASTLeaf.h"
 #include "../Classes/ParseException.h"
@@ -34,9 +33,6 @@ int main() {
 	}
 	Lexer* lexer = new Lexer(uniquePtr.get());
 	uniquePtr.reset();
-
-	Parser* parser = new Parser();
-	parser->setLexer(lexer);
 	//创建环境
 	NestedEnv* env = new NestedEnv();
 	//加入方法
@@ -48,18 +44,16 @@ int main() {
 	try
 	{
 		//词法分析
+		int line = 1;
 		while (lexer->peek(0) != Token::TOKEN_EOF)
 		{
-		//语法分析
-			auto t = parser->parse();
-
-			if (t != nullptr) 
+			Token* t = lexer->read();
+			if (t->getLineNumber() != line)
 			{
-				//计算
-				t->accept(visitor, env);
-				cout << t->toString() << "=>" << visitor->result->asString() << endl;
-				t->release();
+				line = t->getLineNumber();
+				cout << endl;
 			}
+			cout << t->asString()<<" ";
 			AutoreleasePool::getInstance()->clear();
 		}
 	}
@@ -74,7 +68,6 @@ int main() {
 
 	delete visitor;
 	delete env;
-	delete parser;
 	delete lexer;
 	delete Token::TOKEN_EOF;
 	AutoreleasePool::purge();
