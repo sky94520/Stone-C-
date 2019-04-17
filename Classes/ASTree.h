@@ -14,6 +14,8 @@ class Environment;
 class ASTree: public Object
 {
 public:
+	static const std::string TREE_ID;
+public:
 	ASTree() {}
 	virtual ~ASTree(){ }
 public:

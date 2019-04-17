@@ -1,6 +1,7 @@
 #ifndef __Stone_Arguments_H__
 #define __Stone_Arguments_H__
 
+#include <string>
 #include <vector>
 
 #include "Postfix.h"
@@ -12,6 +13,8 @@ class Environment;
 
 class Arguments : public Postfix
 {
+public:
+	static const std::string TREE_ID;
 public:
 	Arguments();
 	Arguments(const std::vector<ASTree*>& list);

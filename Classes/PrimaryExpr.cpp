@@ -2,6 +2,8 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string PrimaryExpr::TREE_ID = "PrimaryExpr";
+
 PrimaryExpr::PrimaryExpr(const std::vector<ASTree*>& list)
 	:ASTList(list)
 {

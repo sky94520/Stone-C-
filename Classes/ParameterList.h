@@ -14,6 +14,8 @@ class Environment;
 class ParameterList : public ASTList
 {
 public:
+	static const std::string TREE_ID;
+public:
 	ParameterList();
 	ParameterList(const std::vector<ASTree*>& list);
 	virtual ~ParameterList();

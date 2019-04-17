@@ -2,6 +2,7 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string ASTList::TREE_ID = "ASTList";
 
 ASTList::ASTList()
 {

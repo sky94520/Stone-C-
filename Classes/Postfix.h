@@ -2,6 +2,7 @@
 #define __Stone_Postfix_H__
 
 #include <vector>
+#include <string>
 
 #include "ASTList.h"
 
@@ -12,6 +13,8 @@ class Environment;
 
 class Postfix : public ASTList
 {
+public:
+	static const std::string TREE_ID;
 public:
 	Postfix();
 	Postfix(const std::vector<ASTree*>& list);

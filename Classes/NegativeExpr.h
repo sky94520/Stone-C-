@@ -15,6 +15,8 @@ class Environment;
 class NegativeExpr : public ASTList
 {
 public:
+	static const std::string TREE_ID;
+public:
 	NegativeExpr(ASTree* a);
 	NegativeExpr(const std::vector<ASTree*>& list);
 

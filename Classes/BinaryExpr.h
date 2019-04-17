@@ -15,6 +15,8 @@ class Environment;
 class BinaryExpr : public ASTList
 {
 public:
+	static const std::string TREE_ID;
+public:
 	BinaryExpr(const std::vector<ASTree*>& list);
 	BinaryExpr(ASTree* left, ASTLeaf* op, ASTree* right);
 	virtual ~BinaryExpr();

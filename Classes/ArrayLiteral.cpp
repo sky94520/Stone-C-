@@ -3,6 +3,8 @@
 #include "Environment.h"
 
 NS_STONE_BEGIN
+const std::string ArrayLiteral::TREE_ID = "ArrayLiteral";
+
 ArrayLiteral::ArrayLiteral()
 {
 }

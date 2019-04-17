@@ -4,6 +4,7 @@
 
 NS_STONE_BEGIN
 
+const std::string ASTLeaf::TREE_ID = "ASTLeaf";
 std::vector<ASTree*> ASTLeaf::empty = std::vector<ASTree*>();
 
 ASTLeaf::ASTLeaf(Token* token) 

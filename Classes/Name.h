@@ -1,6 +1,8 @@
 #ifndef __Stone_Name_H__
 #define __Stone_Name_H__
 
+#include <string>
+
 #include "ASTLeaf.h"
 
 NS_STONE_BEGIN
@@ -11,6 +13,8 @@ class Environment;
 
 class Name : public ASTLeaf
 {
+public:
+	static const std::string TREE_ID;
 public:
 	Name(Token* token);
 

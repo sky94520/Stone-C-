@@ -14,10 +14,10 @@ class Environment;
 
 class IfStmnt : public ASTList
 {
-private:
-	ASTree* _elseBlock;
 public:
-	IfStmnt(const std::vector<ASTree*>& list, ASTree* elseBlock);
+	static const std::string TREE_ID;
+public:
+	IfStmnt(const std::vector<ASTree*>& list);
 
 	ASTree* getCondition(unsigned int i) const;
 	ASTree* getThenBlock(unsigned int i) const;

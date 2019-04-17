@@ -17,6 +17,8 @@ class Environment;
 class DefStmnt : public ASTList
 {
 public:
+	static const std::string TREE_ID;
+public:
 	DefStmnt(const std::vector<ASTree*>& list);
 	virtual ~DefStmnt();
 

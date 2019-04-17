@@ -2,6 +2,8 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string Arguments::TREE_ID = "Arguments";
+
 Arguments::Arguments()
 {
 }

@@ -4,6 +4,7 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string ParameterList::TREE_ID = "ParameterList";
 
 ParameterList::ParameterList()
 {

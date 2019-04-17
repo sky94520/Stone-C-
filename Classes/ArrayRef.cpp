@@ -3,6 +3,8 @@
 #include "Environment.h"
 
 NS_STONE_BEGIN
+const std::string ArrayRef::TREE_ID = "ArrayRef";
+
 ArrayRef::ArrayRef(ASTree* t)
 {
 	_children.push_back(t);

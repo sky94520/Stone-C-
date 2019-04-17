@@ -3,6 +3,7 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string NumberLiteral::TREE_ID = "NumberLiteral";
 
 NumberLiteral::NumberLiteral(Token* token)
 	:ASTLeaf(token)

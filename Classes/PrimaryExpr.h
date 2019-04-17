@@ -2,6 +2,7 @@
 #define __Stone_PrimaryExpr_H__
 
 #include <vector>
+#include <string>
 
 #include "ASTList.h"
 
@@ -12,6 +13,8 @@ class Environment;
 
 class PrimaryExpr : public ASTList
 {
+public:
+	static const std::string TREE_ID;
 public:
 	PrimaryExpr(const std::vector<ASTree*>& list);
 	virtual ~PrimaryExpr();

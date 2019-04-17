@@ -2,6 +2,7 @@
 #define __Stone_ArrayRef_H__
 
 #include <string>
+#include <vector>
 
 #include "ASTList.h"
 
@@ -15,6 +16,8 @@ class Environment;
 */
 class ArrayRef : public ASTList
 {
+public:
+	static const std::string TREE_ID;
 public:
 	ArrayRef(ASTree* t);
 	ArrayRef(const std::vector<ASTree*>& list);

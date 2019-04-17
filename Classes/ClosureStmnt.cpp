@@ -6,6 +6,8 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string ClosureStmnt::TREE_ID = "ClosureStmnt";
+
 ClosureStmnt::ClosureStmnt(const std::vector<ASTree*>& list)
 	:ASTList(list)
 {

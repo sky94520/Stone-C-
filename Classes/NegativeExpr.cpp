@@ -3,6 +3,7 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string NegativeExpr::TREE_ID = "NegativeExpr";
 
 NegativeExpr::NegativeExpr(ASTree* a)
 {

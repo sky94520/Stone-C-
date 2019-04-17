@@ -6,6 +6,8 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string DefStmnt::TREE_ID = "DefStmnt";
+
 DefStmnt::DefStmnt(const std::vector<ASTree*>& list)
 	:ASTList(list)
 {

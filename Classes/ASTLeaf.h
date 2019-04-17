@@ -14,6 +14,8 @@ class Environment;
 class ASTLeaf : public ASTree 
 {
 public:
+	static const std::string TREE_ID;
+public:
 	ASTLeaf(Token* token);
 	virtual ~ASTLeaf();
 	//ªÒ»°token

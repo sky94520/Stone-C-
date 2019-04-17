@@ -4,6 +4,7 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string BinaryExpr::TREE_ID = "BinaryExpr";
 
 BinaryExpr::BinaryExpr(const std::vector<ASTree*>& list)
 	:ASTList(list)

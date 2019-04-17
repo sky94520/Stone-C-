@@ -3,6 +3,7 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string BlockStmnt::TREE_ID = "BlockStmnt";
 
 BlockStmnt::BlockStmnt(const std::vector<ASTree*>& list)
 	:ASTList(list)

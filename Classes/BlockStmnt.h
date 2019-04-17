@@ -14,6 +14,8 @@ class Environment;
 class BlockStmnt : public ASTList
 {
 public:
+	static const std::string TREE_ID;
+public:
 	BlockStmnt(const std::vector<ASTree*>& list);
 public:
 	virtual void accept(Visitor* v, Environment* env);

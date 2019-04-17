@@ -16,6 +16,8 @@ class Environment;
 class ASTList : public ASTree 
 {
 public:
+	static const std::string TREE_ID;
+public:
 	ASTList();
 	ASTList(const std::vector<ASTree*>& list);
 	virtual ~ASTList();

@@ -2,6 +2,7 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string WhileStmnt::TREE_ID = "WhileStmnt";
 
 WhileStmnt::WhileStmnt(const std::vector<ASTree*>& list)
 	:ASTList(list)

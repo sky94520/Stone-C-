@@ -14,6 +14,8 @@ class Environment;
 class StringLiteral : public ASTLeaf
 {
 public:
+	static const std::string TREE_ID;
+public:
 	StringLiteral(Token* token);
 	std::string getValue() const;
 public:

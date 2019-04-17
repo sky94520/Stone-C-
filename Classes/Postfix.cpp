@@ -2,6 +2,8 @@
 #include "Visitor.h"
 
 NS_STONE_BEGIN
+const std::string Postfix::TREE_ID = "Postfix";
+
 Postfix::Postfix()
 {
 }

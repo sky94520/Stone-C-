@@ -1,6 +1,9 @@
 #ifndef __Stone_ClosureStmnt_H__
 #define __Stone_ClosureStmnt_H__
 
+#include <string>
+#include <vector>
+
 #include "ASTList.h"
 
 NS_STONE_BEGIN
@@ -12,6 +15,8 @@ class Environment;
 
 class ClosureStmnt : public ASTList
 {
+public:
+	static const std::string TREE_ID;
 public:
 	ClosureStmnt(const std::vector<ASTree*>& list);
 	virtual ~ClosureStmnt();

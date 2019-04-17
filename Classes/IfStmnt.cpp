@@ -3,9 +3,10 @@
 
 NS_STONE_BEGIN
 
-IfStmnt::IfStmnt(const std::vector<ASTree*>& list, ASTree* elseBlock)
+const std::string IfStmnt::TREE_ID = "IfStmnt";
+
+IfStmnt::IfStmnt(const std::vector<ASTree*>& list)
 	:ASTList(list)
-	,_elseBlock(elseBlock)
 {
 }
 
@@ -21,7 +22,11 @@ ASTree* IfStmnt::getThenBlock(unsigned int i) const
 
 ASTree* IfStmnt::getElseBlock() const
 {
-	return _elseBlock;
+	auto size = this->getNumChildren();
+	if (size % 2 == 0)
+		return nullptr;
+	else
+		return getChild(size - 1);
 }
 
 unsigned int IfStmnt::getIfNumber() const
