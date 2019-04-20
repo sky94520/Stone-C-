@@ -10,7 +10,12 @@ ASTList::ASTList()
 
 ASTList::ASTList(const std::vector<ASTree*>& list) 
 {
-	_children.assign(list.begin(), list.end());
+	for (auto it = list.begin(); it != list.end(); it++)
+	{
+		auto t = *it;
+		t->retain();
+		_children.push_back(t);
+	}
 }
 
 ASTList::~ASTList() {

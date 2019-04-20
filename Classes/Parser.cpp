@@ -81,6 +81,15 @@ Parser::OrTree::OrTree(Parser* parsers[], unsigned n)
 	}
 }
 
+Parser::OrTree::OrTree(Parser* p1, Parser* p2)
+{
+	p1->retain();
+	_parsers.push_back(p1);
+
+	p2->retain();
+	_parsers.push_back(p2);
+}
+
 Parser::OrTree::~OrTree()
 {
 	auto it = _parsers.begin();
@@ -325,7 +334,7 @@ ASTree* Parser::Expr::doShift(Lexer* lexer, ASTree* left, int prec)
 {
 	std::vector<ASTree*> list;
 	list.push_back(left);
-	list.push_back(new ASTLeaf(lexer->read()));
+	list.push_back(Factory::make(ASTLeaf::TREE_ID, lexer->read()));
 
 	ASTree* right = _factor->parse(lexer);
 	Precedence* next;
@@ -369,6 +378,10 @@ Parser::Parser(const std::string& factoryName)
 Parser::Parser(const Parser* parser)
 {
 	this->_elements = parser->_elements;
+	for (Element* element : parser->_elements)
+	{
+		_elements.push_back(element);
+	}
 	this->_factoryName = parser->_factoryName;
 }
 
@@ -539,11 +552,10 @@ Parser* Parser:: orTree(unsigned n, ...)
 
 Parser* Parser::maybe(Parser* p)
 {
-	Parser* p2 = new Parser(p);
-	p2->reset();
-	Parser* parsers[2] = { p, p2 };
+	Parser* p2 = Parser::rule();
 
-	_elements.push_back(new OrTree(parsers, 2));
+	//非终结符可以省略
+	_elements.push_back(new OrTree(p, p2));
 
 	return this;
 }
@@ -585,8 +597,7 @@ Parser* Parser::insertChoice(Parser* p)
 	{
 		Parser* otherwise = new Parser(this);
 		reset();
-		Parser* parsers[2] = { p, otherwise };
-		orTree(2, parsers);
+		orTree(2, p, otherwise);
 	}
 	return this;
 }

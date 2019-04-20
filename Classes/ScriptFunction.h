@@ -12,7 +12,7 @@ class Environment;
 class ScriptFunction : public Function
 {
 public:
-	ScriptFunction(ParameterList* parameters, BlockStmnt* block, Environment* env);
+	explicit ScriptFunction(ParameterList* parameters, BlockStmnt* block, Environment* env);
 	virtual ~ScriptFunction();
 public:
 	//获取参数个数

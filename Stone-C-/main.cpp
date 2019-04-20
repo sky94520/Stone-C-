@@ -17,6 +17,7 @@
 #include "../Classes/EvalVisitor.h"
 #include "../Classes/STAutoreleasePool.h"
 #include "../Classes/BasicParser.h"
+#include "../Classes/FuncParser.h"
 
 using namespace std;
 USING_NS_STONE;
@@ -26,7 +27,7 @@ void outputLexer(Lexer* lexer);
 Value print(Environment* env);
 
 int main() {
-	auto uniquePtr = std::move(getUniqueDataFromFile("2.txt"));
+	auto uniquePtr = std::move(getUniqueDataFromFile("3.txt"));
 	if (uniquePtr == nullptr)
 	{
 		cout << "文件打开失败" << endl;
@@ -42,7 +43,7 @@ int main() {
 	//创建解析器
 	EvalVisitor* visitor = new EvalVisitor();
 	//语法分析树
-	BasicParser* parser = new BasicParser();
+	auto parser = new FuncParser();
 
 	try
 	{
@@ -54,8 +55,8 @@ int main() {
 			//暂时没想到跳过NullStmnt的好方法
 			if (t->getNumChildren() > 0)
 			{
-				t->accept(visitor, env);
 				cout << t->toString() << "=>"<< endl;
+				t->accept(visitor, env);
 				cout << visitor->result->asString() << endl;
 			}
 			//不需要手动释放内存

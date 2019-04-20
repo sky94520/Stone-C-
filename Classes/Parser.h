@@ -74,6 +74,7 @@ protected:
 	{
 	public:
 		OrTree(Parser* parsers[], unsigned n);
+		OrTree(Parser* p1, Parser* p2);
 		virtual ~OrTree();
 		//«∞≤Â»Î£ø
 		void insert(Parser* parser);

@@ -23,9 +23,14 @@
 NS_STONE_BEGIN
 ASTree* Factory::make(const std::string& name, const std::vector<ASTree*>& list)
 {
-	//孩子仅有一个，则返回子孩子
-	if (name != NegativeExpr::TREE_ID && list.size() == 1)
+	//有的节点就算孩子仅有一个也不可省略，则返回子孩子
+	if (name != NegativeExpr::TREE_ID &&
+		name != BlockStmnt::TREE_ID &&
+		name != Arguments::TREE_ID &&
+		list.size() == 1)
+	{
 		return list.at(0);
+	}
 
 	ASTList* t = nullptr;
 
@@ -76,6 +81,9 @@ ASTLeaf* Factory::make(const std::string& name, Token* token)
 		t = new StringLiteral(token);
 	else
 		t = new ASTLeaf(token);
+
+	//自动释放
+	t->autorelease();
 
 	return t;
 }

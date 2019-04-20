@@ -19,7 +19,7 @@ public:
 	virtual ~BasicParser();
 
 	ASTree* parse(Lexer* lexer);
-private:
+protected:
 	bool init();
 protected:
 	//²Ù×÷·û
