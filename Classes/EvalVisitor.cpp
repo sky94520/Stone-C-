@@ -205,7 +205,7 @@ void EvalVisitor::visit(WhileStmnt* t, Environment* env)
 		//Ö´ÐÐÓï¾ä
 		t->getBody()->accept(this, env);
 		//ÔÝ´æ·µ»ØÖµ
-		value = this->result;
+		value = *this->result;
 
 	} while (1);
 	this->setResult(value);

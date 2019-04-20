@@ -54,7 +54,9 @@ int main() {
 			//暂时没想到跳过NullStmnt的好方法
 			if (t->getNumChildren() > 0)
 			{
-				cout << t->toString() << endl;
+				t->accept(visitor, env);
+				cout << t->toString() << "=>"<< endl;
+				cout << visitor->result->asString() << endl;
 			}
 			//不需要手动释放内存
 			AutoreleasePool::getInstance()->clear();

@@ -51,6 +51,8 @@ ASTree* Factory::make(const std::string& name, const std::vector<ASTree*>& list)
 		t = new PrimaryExpr(list);
 	else if (name == WhileStmnt::TREE_ID)
 		t = new WhileStmnt(list);
+	else if (name == BlockStmnt::TREE_ID)
+		t = new BlockStmnt(list);
 	else if (name == NullStmnt::TREE_ID)
 		t = new NullStmnt();
 	else
