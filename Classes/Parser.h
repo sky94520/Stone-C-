@@ -14,6 +14,37 @@ class ASTree;
 class Lexer;
 class Token;
 
+//----------------------------------Precedence--------------------------
+//运算符的优先级和结合性
+class Precedence {
+public:
+	Precedence(int v, bool a) {
+		this->value = v;
+		this->leftAssoc = a;
+	}
+public:
+	int value;
+	//是否是左结合
+	bool leftAssoc;
+};
+//----------------------------------Operators--------------------------
+//运算符
+class Operators: public Object
+{
+public:
+	static bool LEFT;
+	static bool RIGHT;
+public:
+	Operators();
+	~Operators();
+	//添加操作符 优先级和结合性
+	void add(const std::string& name, int prec, bool leftAssoc);
+	//根据名称获取对应的优先级
+	Precedence* get(const std::string& name);
+private:
+	std::unordered_map<std::string, Precedence*> _mapping;
+};
+
 class Parser: public Object
 {
 protected:
@@ -84,11 +115,11 @@ protected:
 	class IdToken : public AToken
 	{
 	public:
-		IdToken(const std::string& factoryName, const std::unordered_set<std::string>& set);
+		IdToken(const std::string& factoryName, const std::unordered_set<std::string>* set);
 	protected:
 		virtual bool test(Token* token) const;
 	private:
-		std::unordered_set<std::string> _reserved;
+		const std::unordered_set<std::string>* _reserved;
 	};
 	//----------------------------------NumToken--------------------------
 	class NumToken : public AToken
@@ -110,7 +141,7 @@ protected:
 	class Leaf : public Element
 	{
 	public:
-		Leaf(std::string tokens[], unsigned n);
+		Leaf(char* tokens[], unsigned n);
 		virtual void parse(Lexer* lexer, std::vector<ASTree*>& result);
 		virtual bool match(Lexer* lexer) const;
 
@@ -122,38 +153,8 @@ protected:
 	class Skip : public Leaf
 	{
 	public:
-		Skip(std::string tokens[], unsigned n);
+		Skip(char* tokens[], unsigned n);
 		virtual void find(std::vector<ASTree*>& result, Token* token);
-	};
-	//----------------------------------Precedence--------------------------
-	//运算符的优先级和结合性
-	class Precedence {
-	public:
-		Precedence(int v, bool a) {
-			this->value = v;
-			this->leftAssoc = a;
-		}
-	public:
-		int value;
-		//是否是左结合
-		bool leftAssoc;
-	};
-	//----------------------------------Operators--------------------------
-	//运算符
-	class Operators
-	{
-	public:
-		static bool LEFT;
-		static bool RIGHT;
-	public:
-		Operators();
-		~Operators();
-		//添加操作符 优先级和结合性
-		void add(const std::string& name, int prec, bool leftAssoc);
-		//根据名称获取对应的优先级
-		Precedence* get(const std::string& name);
-	private:
-		std::unordered_map<std::string, Precedence*> _mapping;
 	};
 	//----------------------------------Expr--------------------------
 	class Expr : public Element
@@ -176,29 +177,61 @@ protected:
 	};
 //----------------------------------Parser--------------------------
 public:
+	Parser();
 	Parser(const std::string& factoryName);
-	Parser(const Parser& parser);
+	Parser(const Parser* parser);
 	virtual ~Parser();
+
+	//执行语法分析
 	ASTree* parse(Lexer* lexer);
 
+	//清空语法规则
 	void reset();
 	void reset(const std::string& factoryName);
 
+	//创建Parser对象
 	static Parser* rule();
 	static Parser* rule(const std::string& factoryName);
 
+	//添加终结字符 (整型)
 	Parser* number();
 	Parser* number(const std::string& factoryName);
 
-	Parser* identifier(const std::unordered_set<std::string>& reserved);
-	Parser* identifier(const std::string& factoryName, const std::unordered_set<std::string>& reserved);
+	//添加终结符 （标识符）
+	Parser* identifier(const std::unordered_set<std::string>* reserved);
+	Parser* identifier(const std::string& factoryName, const std::unordered_set<std::string>* reserved);
 
+	//添加终结符（字符串）
 	Parser* string();
 	Parser* string(const std::string& factoryName);
 
+	//添加终结符？？？
 	Parser* token(unsigned n, ...);
+
+	//添加未包含于抽象语法树的终结符（与pat匹配的标识符）
 	Parser* sep(unsigned n, ...);
+
+	//添加非终结符p
+	Parser* ast(Parser* p);
+
+	//添加若干个由or关系链接的非终结符
 	Parser* orTree(unsigned n, ...);
+
+	//添加可省略的非终结符（如果省略，则作为一颗仅有根节点的抽象语法树处理）
+	Parser* maybe(Parser* p);
+
+	//添加非终结的可省略的非终结符p
+	Parser* option(Parser* p);
+
+	//添加至少重复0次的非终结符p
+	Parser* repeat(Parser* p);
+
+	//添加双目运算符 subexp时因子，operators时运算符表
+	Parser* expression(Parser* subexp, Operators* operators);
+	Parser* expression(const std::string& factoryName, Parser* subexp, Operators* operators);
+
+	//位语法规则起始处的or添加新的分支选项
+	Parser* insertChoice(Parser* p);
 protected:
 	bool match(Lexer* lexer) const;
 protected:

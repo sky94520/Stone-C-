@@ -3,7 +3,7 @@
 NS_STONE_BEGIN
 
 Token* const Token::TOKEN_EOF = new Token(-1);
-const std::string Token::TOKEN_EOL = "\\n";
+const char* Token::TOKEN_EOL = "\\n";
 
 Token::Token(int line)
 	:_line(line)

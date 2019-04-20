@@ -37,7 +37,7 @@ public:
 	//end of file
 	static Token* const TOKEN_EOF;
 	//end of line
-	static const std::string TOKEN_EOL;
+	static const char* TOKEN_EOL;
 };
 
 /*

@@ -11,6 +11,42 @@
 #include "StringLiteral.h"
 
 NS_STONE_BEGIN
+//----------------------------------Operators--------------------------
+bool Operators::LEFT = true;
+bool Operators::RIGHT = false;
+
+Operators::Operators()
+{
+}
+
+Operators::~Operators()
+{
+	auto it = _mapping.begin();
+	//删除
+	while (it != _mapping.end())
+	{
+		auto precedence = it->second;
+		delete precedence;
+
+		it = _mapping.erase(it);
+	}
+}
+
+void Operators::add(const std::string& name, int prec, bool leftAssoc)
+{
+	auto precedence = new Precedence(prec, leftAssoc);
+	_mapping.insert(std::make_pair(name, precedence));
+}
+
+Precedence* Operators::get(const std::string& name)
+{
+	auto it = _mapping.find(name);
+	if (it == _mapping.end())
+		return nullptr;
+
+	return it->second;
+}
+
 //----------------------------------Tree--------------------------
 Parser::Tree::Tree(Parser* parser)
 	:_parser(parser)
@@ -39,7 +75,7 @@ Parser::OrTree::OrTree(Parser* parsers[], unsigned n)
 
 	while (i < n)
 	{
-		Parser* parser = parsers[i];
+		Parser* parser = parsers[i++];
 		parser->retain();
 		_parsers.push_back(parser);
 	}
@@ -86,8 +122,10 @@ bool Parser::OrTree::match(Lexer* lexer) const
 Parser* Parser::OrTree::choose(Lexer* lexer) const
 {
 	for (Parser* p : _parsers)
+	{
 		if (p->match(lexer))
 			return p;
+	}
 
 	return nullptr;
 }
@@ -150,7 +188,7 @@ bool Parser::AToken::match(Lexer* lexer) const
 	return test(lexer->peek(0));
 }
 //----------------------------------IdToken--------------------------
-Parser::IdToken::IdToken(const std::string& factoryName, const std::unordered_set<std::string>& set)
+Parser::IdToken::IdToken(const std::string& factoryName, const std::unordered_set<std::string>* set)
 	:AToken(factoryName)
 	,_reserved(set)
 {
@@ -159,7 +197,7 @@ Parser::IdToken::IdToken(const std::string& factoryName, const std::unordered_se
 bool Parser::IdToken::test(Token* token) const
 {
 	return token->getType() == Token::Type::Identifier &&
-		_reserved.find(token->asString()) != _reserved.end();
+		_reserved->find(token->asString()) == _reserved->end();
 }
 
 //----------------------------------NumToken--------------------------
@@ -185,12 +223,12 @@ bool Parser::StrToken::test(Token* token) const
 }
 
 //----------------------------------Leaf--------------------------
-Parser::Leaf::Leaf(std::string tokens[], unsigned n)
+Parser::Leaf::Leaf(char* tokens[], unsigned n)
 {
 	unsigned index = 0;
 	while (index < n)
 	{
-		_tokens.push_back(tokens[index]);
+		_tokens.push_back(tokens[index++]);
 	}
 }
 
@@ -218,7 +256,7 @@ void Parser::Leaf::parse(Lexer* lexer, std::vector<ASTree*>& result)
 
 bool Parser::Leaf::match(Lexer* lexer) const
 {
-	Token* t = lexer->read();
+	Token* t = lexer->peek(0);
 
 	//为标识符
 	if (t->getType() == Token::Type::Identifier)
@@ -240,7 +278,7 @@ void Parser::Leaf::find(std::vector<ASTree*>& result, Token* token)
 }
 
 //----------------------------------Skip--------------------------
-Parser::Skip::Skip(std::string tokens[], unsigned n)
+Parser::Skip::Skip(char* tokens[], unsigned n)
 	:Leaf(tokens, n)
 {
 }
@@ -248,42 +286,7 @@ Parser::Skip::Skip(std::string tokens[], unsigned n)
 void Parser::Skip::find(std::vector<ASTree*>& result, Token* token)
 {
 	//仅消费，不生成
-}
-
-//----------------------------------Operators--------------------------
-bool Parser::Operators::LEFT = true;
-bool Parser::Operators::RIGHT = false;
-
-Parser::Operators::Operators()
-{
-}
-
-Parser::Operators::~Operators()
-{
-	auto it = _mapping.begin();
-	//删除
-	while (it != _mapping.end())
-	{
-		auto precedence = it->second;
-		delete precedence;
-
-		it = _mapping.erase(it);
-	}
-}
-
-void Parser::Operators::add(const std::string& name, int prec, bool leftAssoc)
-{
-	auto precedence = new Precedence(prec, leftAssoc);
-	_mapping.insert(std::make_pair(name, precedence));
-}
-
-Parser::Precedence* Parser::Operators::get(const std::string& name)
-{
-	auto it = _mapping.find(name);
-	if (it == _mapping.end())
-		return nullptr;
-
-	return it->second;
+	delete token;
 }
 
 //----------------------------------Expr--------------------------
@@ -298,8 +301,7 @@ Parser::Expr::Expr(const std::string& factoryName, Parser* exp, Operators* map)
 Parser::Expr::~Expr()
 {
 	_factor->release();
-	//TODO
-	delete _operators;
+	_operators->release();
 }
 
 void Parser::Expr::parse(Lexer* lexer, std::vector<ASTree*>& result)
@@ -337,7 +339,7 @@ ASTree* Parser::Expr::doShift(Lexer* lexer, ASTree* left, int prec)
 	return Factory::make(_factoryName, list);
 }
 
-Parser::Precedence* Parser::Expr::nextOperator(Lexer* lexer)
+Precedence* Parser::Expr::nextOperator(Lexer* lexer)
 {
 	Token* token = lexer->peek(0);
 	//为标识符,则获取名称对应的优先权
@@ -354,15 +356,20 @@ bool Parser::Expr::rightIsExpr(int prec, Precedence* nextPrec)
 		return prec <= nextPrec->value;
 }
 //----------------------------------Parser--------------------------
+Parser::Parser()
+	:Parser(ASTList::TREE_ID)
+{
+}
+
 Parser::Parser(const std::string& factoryName)
 	:_factoryName(factoryName)
 {
 }
 
-Parser::Parser(const Parser& parser)
+Parser::Parser(const Parser* parser)
 {
-	this->_elements = parser._elements;
-	this->_factoryName = parser._factoryName;
+	this->_elements = parser->_elements;
+	this->_factoryName = parser->_factoryName;
 }
 
 Parser::~Parser()
@@ -404,7 +411,6 @@ bool Parser::match(Lexer* lexer) const
 
 void Parser::reset()
 {
-	//:_factoryName(ASTList::TREE_ID)
 	reset(ASTList::TREE_ID);
 }
 
@@ -429,7 +435,10 @@ Parser* Parser::rule()
 
 Parser* Parser::rule(const std::string& factoryName)
 {
-	return new Parser(factoryName);
+	Parser* parser = new Parser(factoryName);
+	parser->autorelease();
+
+	return parser;
 }
 
 Parser* Parser::number()
@@ -443,12 +452,12 @@ Parser* Parser::number(const std::string& factoryName)
 	return this;
 }
 
-Parser* Parser::identifier(const std::unordered_set<std::string>& reserved)
+Parser* Parser::identifier(const std::unordered_set<std::string>* reserved)
 {
 	return identifier(Name::TREE_ID, reserved);
 }
 
-Parser* Parser::identifier(const std::string& factoryName, const std::unordered_set<std::string>& reserved)
+Parser* Parser::identifier(const std::string& factoryName, const std::unordered_set<std::string>* reserved)
 {
 	_elements.push_back(new IdToken(factoryName, reserved));
 	return this;
@@ -467,26 +476,118 @@ Parser* Parser::string(const std::string& factoryName)
 
 Parser* Parser::token(unsigned n, ...)
 {
-	std::string* tokens = new std::string[n];
+	char** tokens = new char*[n];
 	unsigned index = 0;
 
 	va_list args;
 	va_start(args, n);
 	while (index < n)
 	{
-		const char* text = va_arg(args, const char*);
+		char* text = va_arg(args,char*);
 		tokens[index++] = text;
 	}
 	va_end(args);
 	_elements.push_back(new Leaf(tokens, n));
+	delete[] tokens;
 	return this;
 }
 
 Parser* Parser::sep(unsigned n, ...)
 {
+	char** seps = new char*[n];
+	unsigned index = 0;
+
+	va_list args;
+	va_start(args, n);
+	while (index < n)
+	{
+		char* text = va_arg(args, char*);
+		seps[index++] = text;
+	}
+	va_end(args);
+	_elements.push_back(new Skip(seps, n));
+	delete[] seps;
+
+	return this;
+}
+
+Parser* Parser::ast(Parser* p)
+{
+	_elements.push_back(new Tree(p));
+
+	return this;
 }
 
 Parser* Parser:: orTree(unsigned n, ...)
 {
+	Parser** parsers = new Parser*[n];
+	unsigned index = 0;
+
+	va_list args;
+	va_start(args, n);
+	while (index < n)
+	{
+		Parser* p = va_arg(args, Parser*);
+		parsers[index++] = p;
+	}
+	va_end(args);
+	_elements.push_back(new OrTree(parsers, n));
+	delete[] parsers;
+
+	return this;
+}
+
+Parser* Parser::maybe(Parser* p)
+{
+	Parser* p2 = new Parser(p);
+	p2->reset();
+	Parser* parsers[2] = { p, p2 };
+
+	_elements.push_back(new OrTree(parsers, 2));
+
+	return this;
+}
+
+Parser* Parser::option(Parser* p)
+{
+	_elements.push_back(new Repeat(p, true));
+
+	return this;
+}
+
+Parser* Parser::repeat(Parser* p)
+{
+	_elements.push_back(new Repeat(p, false));
+	return this;
+}
+
+Parser* Parser::expression(Parser* subexp, Operators* operators)
+{
+	_elements.push_back(new Expr(ASTList::TREE_ID, subexp, operators));
+	return this;
+}
+
+Parser* Parser::expression(const std::string& factoryName, Parser* subexp, Operators* operators)
+{
+	_elements.push_back(new Expr(factoryName, subexp, operators));
+	return this;
+}
+
+Parser* Parser::insertChoice(Parser* p)
+{
+	OrTree* e = dynamic_cast<OrTree*>(_elements.at(0));
+
+	if (e != nullptr)
+	{
+		e->insert(p);
+	}
+	else
+	{
+		Parser* otherwise = new Parser(this);
+		reset();
+		Parser* parsers[2] = { p, otherwise };
+		orTree(2, parsers);
+	}
+	return this;
 }
 NS_STONE_END

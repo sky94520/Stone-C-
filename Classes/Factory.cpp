@@ -18,15 +18,14 @@
 #include "ParameterList.h"
 #include "PrimaryExpr.h"
 #include "WhileStmnt.h"
+#include "NullStmnt.h"
 
 NS_STONE_BEGIN
 ASTree* Factory::make(const std::string& name, const std::vector<ASTree*>& list)
 {
 	//孩子仅有一个，则返回子孩子
-	/*
-	if (name != NegativeExpr::TREE_ID || list.size() == 1)
+	if (name != NegativeExpr::TREE_ID && list.size() == 1)
 		return list.at(0);
-		*/
 
 	ASTList* t = nullptr;
 
@@ -52,8 +51,13 @@ ASTree* Factory::make(const std::string& name, const std::vector<ASTree*>& list)
 		t = new PrimaryExpr(list);
 	else if (name == WhileStmnt::TREE_ID)
 		t = new WhileStmnt(list);
+	else if (name == NullStmnt::TREE_ID)
+		t = new NullStmnt();
 	else
 		t = new ASTList(list);
+
+	//自动释放
+	t->autorelease();
 
 	return t;
 }

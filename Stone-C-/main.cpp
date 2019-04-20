@@ -16,6 +16,7 @@
 #include "../Classes/NestedEnv.h"
 #include "../Classes/EvalVisitor.h"
 #include "../Classes/STAutoreleasePool.h"
+#include "../Classes/BasicParser.h"
 
 using namespace std;
 USING_NS_STONE;
@@ -25,7 +26,7 @@ void outputLexer(Lexer* lexer);
 Value print(Environment* env);
 
 int main() {
-	auto uniquePtr = std::move(getUniqueDataFromFile("1.txt"));
+	auto uniquePtr = std::move(getUniqueDataFromFile("2.txt"));
 	if (uniquePtr == nullptr)
 	{
 		cout << "文件打开失败" << endl;
@@ -40,6 +41,8 @@ int main() {
 	env->putNative("print", print, params, 1);
 	//创建解析器
 	EvalVisitor* visitor = new EvalVisitor();
+	//语法分析树
+	BasicParser* parser = new BasicParser();
 
 	try
 	{
@@ -47,13 +50,13 @@ int main() {
 		int line = 1;
 		while (lexer->peek(0) != Token::TOKEN_EOF)
 		{
-			Token* t = lexer->read();
-			if (t->getLineNumber() != line)
+			ASTree* t = parser->parse(lexer);
+			//暂时没想到跳过NullStmnt的好方法
+			if (t->getNumChildren() > 0)
 			{
-				line = t->getLineNumber();
-				cout << endl;
+				cout << t->toString() << endl;
 			}
-			cout << t->asString()<<" ";
+			//不需要手动释放内存
 			AutoreleasePool::getInstance()->clear();
 		}
 	}
@@ -66,6 +69,7 @@ int main() {
 		cout << e.what() << endl;
 	}
 
+	delete parser;
 	delete visitor;
 	delete env;
 	delete lexer;
