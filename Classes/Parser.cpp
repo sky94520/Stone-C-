@@ -382,7 +382,6 @@ Parser::Parser(const std::string& factoryName)
 
 Parser::Parser(const Parser* parser)
 {
-	this->_elements = parser->_elements;
 	for (Element* element : parser->_elements)
 	{
 		_elements.push_back(element);
@@ -601,7 +600,10 @@ Parser* Parser::insertChoice(Parser* p)
 	else
 	{
 		Parser* otherwise = new Parser(this);
-		reset();
+		otherwise->autorelease();
+
+		_elements.clear();
+		//reset();
 		orTree(2, p, otherwise);
 	}
 	return this;
