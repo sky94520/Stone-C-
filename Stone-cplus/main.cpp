@@ -19,6 +19,7 @@
 #include "../Classes/BasicParser.h"
 #include "../Classes/FuncParser.h"
 #include "../Classes/ClosureParser.h"
+#include "../Classes/ArrayParser.h"
 
 using namespace std;
 USING_NS_STONE;
@@ -28,7 +29,7 @@ void outputLexer(Lexer* lexer);
 Value print(Environment* env);
 
 int main() {
-	auto uniquePtr = std::move(getUniqueDataFromFile("native.txt"));
+	auto uniquePtr = std::move(getUniqueDataFromFile("1.txt"));
 	if (uniquePtr == nullptr)
 	{
 		cout << "文件打开失败" << endl;
@@ -44,7 +45,7 @@ int main() {
 	//创建解析器
 	EvalVisitor* visitor = new EvalVisitor();
 	//语法分析树
-	auto parser = new ClosureParser();
+	auto parser = new ArrayParser();
 
 	try
 	{
@@ -59,6 +60,7 @@ int main() {
 				cout << t->toString() << "=>";
 				t->accept(visitor, env);
 				cout << visitor->result->asString() << endl;
+				//cout << endl;
 			}
 			//不需要手动释放内存
 			AutoreleasePool::getInstance()->clear();
