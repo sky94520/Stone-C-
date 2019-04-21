@@ -28,6 +28,7 @@ ASTree* Factory::make(const std::string& name, const std::vector<ASTree*>& list)
 		name != BlockStmnt::TREE_ID &&
 		name != Arguments::TREE_ID &&
 		name != ParameterList::TREE_ID &&
+		name != ArrayRef::TREE_ID &&
 		list.size() == 1)
 	{
 		return list.at(0);
@@ -37,7 +38,7 @@ ASTree* Factory::make(const std::string& name, const std::vector<ASTree*>& list)
 
 	if (name == ArrayLiteral::TREE_ID)
 		t = new ArrayLiteral(list);
-	if (name == Arguments::TREE_ID)
+	else if (name == Arguments::TREE_ID)
 		t = new Arguments(list);
 	else if (name == ArrayRef::TREE_ID)
 		t = new ArrayRef(list);
