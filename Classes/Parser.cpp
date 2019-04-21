@@ -9,6 +9,7 @@
 #include "NumberLiteral.h"
 #include "Name.h"
 #include "StringLiteral.h"
+#include "Arguments.h"
 
 NS_STONE_BEGIN
 //----------------------------------Operators--------------------------
@@ -155,10 +156,14 @@ void Parser::Repeat::parse(Lexer* lexer, std::vector<ASTree*>& result)
 {
 	while (_parser->match(lexer))
 	{
-		ASTree* t = _parser->parse(lexer);
-		//TODO:去掉children为0的ASTList
-		if (dynamic_cast<ASTList*>(t) == nullptr || t->getNumChildren() > 0)
+		auto t = _parser->parse(lexer);
+		//添加 1.叶子节点 2.子孩子大于0的叶子节点 3.Arguments节点
+		if (dynamic_cast<ASTList*>(t) == nullptr ||
+			t->getNumChildren() > 0 ||
+			dynamic_cast<Arguments*>(t) != nullptr)
+		{
 			result.push_back(t);
+		}
 
 		if (_onlyOnce)
 			break;
@@ -552,7 +557,7 @@ Parser* Parser:: orTree(unsigned n, ...)
 
 Parser* Parser::maybe(Parser* p)
 {
-	Parser* p2 = Parser::rule();
+	Parser* p2 = Parser::rule(p->_factoryName);
 
 	//非终结符可以省略
 	_elements.push_back(new OrTree(p, p2));

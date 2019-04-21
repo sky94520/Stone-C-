@@ -27,6 +27,7 @@ ASTree* Factory::make(const std::string& name, const std::vector<ASTree*>& list)
 	if (name != NegativeExpr::TREE_ID &&
 		name != BlockStmnt::TREE_ID &&
 		name != Arguments::TREE_ID &&
+		name != ParameterList::TREE_ID &&
 		list.size() == 1)
 	{
 		return list.at(0);

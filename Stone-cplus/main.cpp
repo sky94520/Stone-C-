@@ -18,6 +18,7 @@
 #include "../Classes/STAutoreleasePool.h"
 #include "../Classes/BasicParser.h"
 #include "../Classes/FuncParser.h"
+#include "../Classes/ClosureParser.h"
 
 using namespace std;
 USING_NS_STONE;
@@ -43,7 +44,7 @@ int main() {
 	//创建解析器
 	EvalVisitor* visitor = new EvalVisitor();
 	//语法分析树
-	auto parser = new FuncParser();
+	auto parser = new ClosureParser();
 
 	try
 	{

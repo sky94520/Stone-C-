@@ -35,7 +35,7 @@ void ClosureStmnt::accept(Visitor* v, Environment* env)
 std::string ClosureStmnt::toString() const
 {
 	std::stringstream in;
-	in << "(fun " << getParameters()->toString() << " ";
+	in << "(closure " << getParameters()->toString() << " ";
 	in << getBody()->toString() << ")";
 
 	return in.str();

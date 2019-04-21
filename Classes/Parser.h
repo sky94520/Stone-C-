@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <typeinfo>
 #include <cstdarg>
 #include <unordered_set>
 #include <unordered_map>

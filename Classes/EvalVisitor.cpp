@@ -248,6 +248,7 @@ void EvalVisitor::visit(Arguments* t, Environment* env)
 void EvalVisitor::visit(DefStmnt* t, Environment* env)
 {
 	//直接在本环境下添加Function对象
+	auto params = t->getParameters();
 	Function* function = new ScriptFunction(t->getParameters(), t->getBody(), env);
 	Value value = Value(function);
 

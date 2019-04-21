@@ -1,11 +1,4 @@
-def max(a, b){
-	if a > b{
-		a;
-	}else {
-		b;
-	}
+def test(){
+	3;
 }
-
-a = "hello";
-a = max(3, 5);
-a;
+test();
