@@ -6,4 +6,6 @@ def max(a, b){
 	}
 }
 
-max(3, 5);
+a = "hello";
+a = max(3, 5);
+a;

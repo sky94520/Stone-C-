@@ -27,7 +27,7 @@ void outputLexer(Lexer* lexer);
 Value print(Environment* env);
 
 int main() {
-	auto uniquePtr = std::move(getUniqueDataFromFile("3.txt"));
+	auto uniquePtr = std::move(getUniqueDataFromFile("function.txt"));
 	if (uniquePtr == nullptr)
 	{
 		cout << "文件打开失败" << endl;
