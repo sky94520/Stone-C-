@@ -241,19 +241,14 @@ void EvalVisitor::visit(Arguments* t, Environment* env)
 	}
 	//执行函数体
 	function->execute(this, newEnv);
-	//释放环境
-	newEnv->release();
+	//bug1:目前引用环境变量，当环境释放时，如果this->result指向的当前环境，则会造成返回值失败
+	//自动释放环境
 }
 
 void EvalVisitor::visit(DefStmnt* t, Environment* env)
 {
 	//直接在本环境下添加Function对象
-	ParameterList* params = t->getParameters();
-	BlockStmnt* block = t->getBody();
-	auto t1 = (ParameterList*)t->getChild(1);
-	auto t2 = (BlockStmnt*)t->getChild(2);
-
-	Function* function = new ScriptFunction(t1, t2, env);
+	Function* function = new ScriptFunction(t->getParameters(), t->getBody(), env);
 	Value value = Value(function);
 
 	env->putNew(t->getName(), value);

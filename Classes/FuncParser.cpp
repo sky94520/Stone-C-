@@ -50,6 +50,8 @@ bool FuncParser::init()
 
 	_primary->repeat(_postfix);
 	_simple->option(_args);
+
+	//program: [ def | statement] (";" | EOL)
 	_program->insertChoice(_def);
 
 	return true;

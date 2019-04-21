@@ -22,7 +22,10 @@ Environment* Function::getEnvironment() const
 
 Environment* Function::makeEnv()
 {
-	return new NestedEnv(_env);
+	//创建一个自动释放的环境
+	auto env = new NestedEnv(_env);
+	env->autorelease();
+	return env;
 }
 
 NS_STONE_END
