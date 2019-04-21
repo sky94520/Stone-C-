@@ -28,7 +28,7 @@ void outputLexer(Lexer* lexer);
 Value print(Environment* env);
 
 int main() {
-	auto uniquePtr = std::move(getUniqueDataFromFile("function.txt"));
+	auto uniquePtr = std::move(getUniqueDataFromFile("closure.txt"));
 	if (uniquePtr == nullptr)
 	{
 		cout << "文件打开失败" << endl;
@@ -56,7 +56,7 @@ int main() {
 			//暂时没想到跳过NullStmnt的好方法
 			if (t->getNumChildren() > 0)
 			{
-				cout << t->toString() << "=>"<< endl;
+				cout << t->toString() << "=>";
 				t->accept(visitor, env);
 				cout << visitor->result->asString() << endl;
 			}
