@@ -13,6 +13,9 @@ class ASTree;
 class Visitor;
 class Environment;
 
+/**
+ * 抽象语法树中的分支节点
+*/
 class ASTList : public ASTree 
 {
 public:

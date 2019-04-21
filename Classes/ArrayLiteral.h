@@ -12,7 +12,7 @@ class Visitor;
 class Environment;
 
 /*
-	用于数组的声明
+	用于数组的声明, 如 a = [1, "2", "hello"]
 */
 class ArrayLiteral : public ASTList
 {

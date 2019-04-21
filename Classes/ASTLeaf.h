@@ -11,6 +11,9 @@ class Token;
 class Visitor;
 class Environment;
 
+/**
+ * 叶子节点，在抽象语法树中只有ASTLeaf及其子类才有Token对象
+*/
 class ASTLeaf : public ASTree 
 {
 public:

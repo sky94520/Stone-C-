@@ -12,6 +12,10 @@ class Parser;
 class Lexer;
 class Operators;
 
+/**
+ * 基础解析类，包含了基础的语法树生成结构，目前包含了if else while 
+ * 和一般的表达式
+*/
 class BasicParser
 {
 public:

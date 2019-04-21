@@ -11,6 +11,7 @@ NS_STONE_BEGIN
 class Visitor;
 class Environment;
 
+/*抽象语法树的节点基类*/
 class ASTree: public Object
 {
 public:

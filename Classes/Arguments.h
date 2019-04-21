@@ -11,6 +11,9 @@ NS_STONE_BEGIN
 class Visitor;
 class Environment;
 
+/*
+ * 参数调用
+*/
 class Arguments : public Postfix
 {
 public:
