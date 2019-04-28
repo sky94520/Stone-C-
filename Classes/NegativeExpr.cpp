@@ -7,6 +7,7 @@ const std::string NegativeExpr::TREE_ID = "NegativeExpr";
 
 NegativeExpr::NegativeExpr(ASTree* a)
 {
+	ASTree::init(TREE_ID);
 	_children.push_back(a);
 }
 

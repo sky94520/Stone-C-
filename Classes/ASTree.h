@@ -17,8 +17,10 @@ class ASTree: public Object
 public:
 	static const std::string TREE_ID;
 public:
-	ASTree() {}
-	virtual ~ASTree(){ }
+	ASTree();
+	virtual ~ASTree();
+	bool init(const std::string& id);
+	const std::string& getTreeID() const { return _treeID; }
 public:
 	virtual void accept(Visitor* v, Environment* env);
 	virtual ASTree* getChild(unsigned int i) const = 0;
@@ -27,6 +29,8 @@ public:
 	virtual std::vector<ASTree*>::iterator begin() = 0;
 	virtual std::vector<ASTree*>::iterator end() = 0;
 	virtual std::string toString() const = 0;
+protected:
+	std::string _treeID;
 };
 NS_STONE_END
 #endif

@@ -1,5 +1,12 @@
 array = [1, 2, 3 + 4, "haha"];
-array[0];
 array[0] = 3;
-array[0];
-print("ÄãºÃ°¡£¬sky");
+
+if (array[0] == 1){
+	print("array is 1");
+}elif (array[0] == 3){
+	print("array is 3");
+}elif (1){
+	print("ºÙºÙ");
+}else {
+	print("°¡¹ş");
+}

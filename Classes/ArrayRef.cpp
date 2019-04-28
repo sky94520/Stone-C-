@@ -8,6 +8,7 @@ const std::string ArrayRef::TREE_ID = "ArrayRef";
 ArrayRef::ArrayRef(ASTree* t)
 {
 	_children.push_back(t);
+	ASTree::init(TREE_ID);
 }
 
 ArrayRef::ArrayRef(const std::vector<ASTree*>& list)

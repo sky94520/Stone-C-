@@ -8,6 +8,7 @@ const std::string BlockStmnt::TREE_ID = "BlockStmnt";
 BlockStmnt::BlockStmnt(const std::vector<ASTree*>& list)
 	:ASTList(list)
 {
+	ASTree::init(TREE_ID);
 }
 
 void BlockStmnt::accept(Visitor* v, Environment* env)

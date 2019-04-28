@@ -6,6 +6,7 @@ const std::string Postfix::TREE_ID = "Postfix";
 
 Postfix::Postfix()
 {
+	ASTree::init(TREE_ID);
 }
 
 Postfix::Postfix(const std::vector<ASTree*>& list)

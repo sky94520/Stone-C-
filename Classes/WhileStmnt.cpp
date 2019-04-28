@@ -7,6 +7,7 @@ const std::string WhileStmnt::TREE_ID = "WhileStmnt";
 WhileStmnt::WhileStmnt(const std::vector<ASTree*>& list)
 	:ASTList(list)
 {
+	ASTree::init(TREE_ID);
 }
 
 ASTree* WhileStmnt::getCondition() const

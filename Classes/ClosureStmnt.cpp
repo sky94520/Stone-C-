@@ -11,6 +11,7 @@ const std::string ClosureStmnt::TREE_ID = "ClosureStmnt";
 ClosureStmnt::ClosureStmnt(const std::vector<ASTree*>& list)
 	:ASTList(list)
 {
+	ASTree::init(TREE_ID);
 }
 
 ClosureStmnt::~ClosureStmnt()

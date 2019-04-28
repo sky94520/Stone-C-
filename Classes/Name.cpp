@@ -8,6 +8,7 @@ const std::string Name::TREE_ID = "Name";
 Name::Name(Token* token)
 	:ASTLeaf(token)
 {
+	ASTree::init(TREE_ID);
 }
 
 std::string Name::getName() const

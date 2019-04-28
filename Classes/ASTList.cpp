@@ -6,6 +6,7 @@ const std::string ASTList::TREE_ID = "ASTList";
 
 ASTList::ASTList()
 {
+	ASTree::init(TREE_ID);
 }
 
 ASTList::ASTList(const std::vector<ASTree*>& list) 

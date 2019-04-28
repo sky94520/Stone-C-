@@ -8,6 +8,7 @@ const std::string ParameterList::TREE_ID = "ParameterList";
 
 ParameterList::ParameterList()
 {
+	ASTree::init(TREE_ID);
 }
 
 ParameterList::ParameterList(const std::vector<ASTree*>& list)

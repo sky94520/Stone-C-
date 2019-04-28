@@ -7,6 +7,7 @@ const std::string ArrayLiteral::TREE_ID = "ArrayLiteral";
 
 ArrayLiteral::ArrayLiteral()
 {
+	ASTree::init(TREE_ID);
 }
 
 ArrayLiteral::ArrayLiteral(const std::vector<ASTree*>& list)

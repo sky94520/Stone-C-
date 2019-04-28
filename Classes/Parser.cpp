@@ -603,7 +603,6 @@ Parser* Parser::insertChoice(Parser* p)
 		otherwise->autorelease();
 
 		_elements.clear();
-		//reset();
 		orTree(2, p, otherwise);
 	}
 	return this;

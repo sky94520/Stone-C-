@@ -11,6 +11,7 @@ const std::string DefStmnt::TREE_ID = "DefStmnt";
 DefStmnt::DefStmnt(const std::vector<ASTree*>& list)
 	:ASTList(list)
 {
+	ASTree::init(TREE_ID);
 }
 
 DefStmnt::~DefStmnt()

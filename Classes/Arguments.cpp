@@ -6,6 +6,7 @@ const std::string Arguments::TREE_ID = "Arguments";
 
 Arguments::Arguments()
 {
+	ASTree::init(TREE_ID);
 }
 
 Arguments::Arguments(const std::vector<ASTree*>& list)

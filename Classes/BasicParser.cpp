@@ -29,7 +29,6 @@ BasicParser::BasicParser()
 
 	Parser* expr0 = Parser::rule();
 	expr0->retain();
-	//锁定引用
 	expr0->setLock(true);
 
 	//primary: "(" expr ")" | NUMBER | IDENTIFIER | STRING
@@ -71,12 +70,16 @@ BasicParser::BasicParser()
 	_simple->retain();
 	_simple->setLock(true);
 
-	/* statement: "if" expr block ["else" block]
+	/* statement: "if" expr block {"elif" expr block} ["else" block]
 				  | "while" expr block
 				  | simple
 	*/
 	_statement = statement0->orTree(3,
-		Parser::rule(IfStmnt::TREE_ID)->sep(1, "if")->ast(_expr)->ast(_block)->option(Parser::rule()->sep(1, "else")->ast(_block)),
+		Parser::rule(IfStmnt::TREE_ID)
+			->sep(1, "if")->ast(_expr)->ast(_block)
+			->repeat(Parser::rule()->sep(1, "elif")->ast(_expr)->ast(_block))
+			->option(Parser::rule()->sep(1, "else")->ast(_block)),
+		//while
 		Parser::rule(WhileStmnt::TREE_ID)->sep(1, "while")->ast(_expr)->ast(_block),
 		_simple
 	);
@@ -99,8 +102,6 @@ BasicParser::~BasicParser()
 	_expr->release(true);
 	_factor->release(true);
 	_primary->release(true);
-	//TODO:暂时会发生循环引用
-	//_statement->release();
 
 	_operators->release();
 	delete _reserved;

@@ -8,6 +8,7 @@ const std::string NumberLiteral::TREE_ID = "NumberLiteral";
 NumberLiteral::NumberLiteral(Token* token)
 	:ASTLeaf(token)
 {
+	ASTree::init(TREE_ID);
 }
 
 int NumberLiteral::getValue() const

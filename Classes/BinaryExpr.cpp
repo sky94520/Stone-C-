@@ -9,6 +9,7 @@ const std::string BinaryExpr::TREE_ID = "BinaryExpr";
 BinaryExpr::BinaryExpr(const std::vector<ASTree*>& list)
 	:ASTList(list)
 {
+	ASTree::init(TREE_ID);
 }
 
 BinaryExpr::BinaryExpr(ASTree* left, ASTLeaf* op, ASTree* right)

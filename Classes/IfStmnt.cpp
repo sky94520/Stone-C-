@@ -6,8 +6,19 @@ NS_STONE_BEGIN
 const std::string IfStmnt::TREE_ID = "IfStmnt";
 
 IfStmnt::IfStmnt(const std::vector<ASTree*>& list)
-	:ASTList(list)
 {
+	ASTree::init(TREE_ID);
+
+	for (ASTree* t : list)
+	{
+		if (t->getTreeID() == ASTList::TREE_ID)
+		{
+			ASTList* children = static_cast<ASTList*>(t);
+			_children.assign(children->begin(), children->end());
+		}
+		else
+			_children.push_back(t);
+	}
 }
 
 ASTree* IfStmnt::getCondition(unsigned int i) const

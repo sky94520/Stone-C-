@@ -7,6 +7,7 @@ const std::string PrimaryExpr::TREE_ID = "PrimaryExpr";
 PrimaryExpr::PrimaryExpr(const std::vector<ASTree*>& list)
 	:ASTList(list)
 {
+	ASTree::init(TREE_ID);
 }
 
 PrimaryExpr::~PrimaryExpr()

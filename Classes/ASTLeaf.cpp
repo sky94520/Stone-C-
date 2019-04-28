@@ -10,6 +10,7 @@ std::vector<ASTree*> ASTLeaf::empty = std::vector<ASTree*>();
 ASTLeaf::ASTLeaf(Token* token) 
 	:_token(token)
 {
+	ASTree::init(TREE_ID);
 }
 
 ASTLeaf::~ASTLeaf()
