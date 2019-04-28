@@ -106,8 +106,11 @@ void EvalVisitor::visit(BinaryExpr* t, Environment* env)
 		t->getRight()->accept(this, env);
 		//暂存值
 		Value right = *this->result;
+
 		//左值必须是Name,即可修改的左值
-		Name* left = dynamic_cast<Name*>(t->getLeft());
+		Name* left = nullptr;
+		if (t->getLeft()->getTreeID() == Name::TREE_ID)
+			left = static_cast<Name*>(t->getLeft());
 		bool ret = false;
 		//尝试判断是否是PrimaryExpr
 		if (left == nullptr)

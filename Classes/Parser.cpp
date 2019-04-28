@@ -158,11 +158,19 @@ void Parser::Repeat::parse(Lexer* lexer, std::vector<ASTree*>& result)
 	{
 		auto t = _parser->parse(lexer);
 		//添加 1.叶子节点 2.子孩子大于0的叶子节点 3.Arguments节点
-		if (dynamic_cast<ASTList*>(t) == nullptr ||
-			t->getNumChildren() > 0 ||
-			dynamic_cast<Arguments*>(t) != nullptr)
+		auto& treeID = t->getTreeID();
+
+		if (treeID == ASTLeaf::TREE_ID || treeID == Name::TREE_ID ||
+			treeID == StringLiteral::TREE_ID || treeID == NumberLiteral::TREE_ID)
 		{
 			result.push_back(t);
+		}
+		else
+		{
+			ASTList* list = static_cast<ASTList*>(t);
+
+			if (list->getNumChildren() > 0 || treeID == Arguments::TREE_ID)
+				result.push_back(t);
 		}
 
 		if (_onlyOnce)

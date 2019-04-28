@@ -12,6 +12,7 @@ Arguments::Arguments()
 Arguments::Arguments(const std::vector<ASTree*>& list)
 	:Postfix(list)
 {
+	ASTree::init(TREE_ID);
 }
 
 Arguments::~Arguments()
