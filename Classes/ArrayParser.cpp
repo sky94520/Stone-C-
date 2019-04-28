@@ -9,18 +9,17 @@ ArrayParser::ArrayParser()
 	:_elements(nullptr)
 {
 	//elements: expr {"," expr}
-	_elements = Parser::rule(ArrayLiteral::TREE_ID)
-		->ast(_expr)->repeat(Parser::rule()->sep(1, ",")->ast(_expr));
+	_elements = Parser::rule(ArrayLiteral::TREE_ID);
 	_elements->retain();
+	_elements->setLock(true);
+	_elements->ast(_expr)->repeat(Parser::rule()->sep(1, ",")->ast(_expr));
 
 	this->init();
 }
 
 ArrayParser::~ArrayParser()
 {
-	_elements->release();
-	//???
-	_expr->release();
+	_elements->release(true);
 }
 
 bool ArrayParser::init()

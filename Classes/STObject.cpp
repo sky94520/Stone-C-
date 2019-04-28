@@ -5,6 +5,7 @@ NS_STONE_BEGIN
 Object::Object()
 	:_referenceCount(1)
 	,_managed(false)
+	,_lock(false)
 {
 }
 
@@ -16,14 +17,22 @@ Object::~Object()
 		AutoreleasePool::getInstance()->removeObject(this);
 	}
 }
-//添加引用
+
 void Object::retain()
 {
-	_referenceCount++;
+	//未加锁才会添加引用
+	if (!_lock)
+	{
+		_referenceCount++;
+	}
 }
-//释放引用
-void Object::release()
+
+void Object::release(bool force)
 {
+	//加锁且非强制，则退出
+	if (_lock && !force)
+		return;
+
 	_referenceCount--;
 
 	if (_referenceCount == 0)

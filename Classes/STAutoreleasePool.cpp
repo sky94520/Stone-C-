@@ -54,7 +54,7 @@ void AutoreleasePool::clear()
 	{
 		auto object = *it;
 		object->_managed = false;
-		object->release();
+		object->release(true);
 
 		it = _managedObjects.erase(it);
 	}

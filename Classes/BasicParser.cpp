@@ -28,15 +28,25 @@ BasicParser::BasicParser()
 	_reserved = new std::unordered_set<std::string>();
 
 	Parser* expr0 = Parser::rule();
+	expr0->retain();
+	//锁定引用
+	expr0->setLock(true);
+
 	//primary: "(" expr ")" | NUMBER | IDENTIFIER | STRING
-	_primary = Parser::rule(PrimaryExpr::TREE_ID)->orTree(4, 
+	_primary = Parser::rule(PrimaryExpr::TREE_ID);
+	_primary->retain();
+	_primary->setLock(true);
+	_primary->orTree(4, 
 		Parser::rule()->sep(1, "(")->ast(expr0)->sep(1, ")"),
 		Parser::rule()->number(NumberLiteral::TREE_ID),
 		Parser::rule()->identifier(Name::TREE_ID, _reserved),
 		Parser::rule()->string(StringLiteral::TREE_ID));
 
 	//factor: "-" primary | primary
-	_factor = Parser::rule()->orTree(2,
+	_factor = Parser::rule();
+	_factor->retain();
+	_factor->setLock(true);
+	_factor->orTree(2,
 		Parser::rule(NegativeExpr::TREE_ID)->sep(1, "-")->ast(_primary),
 		_primary);
 
@@ -44,14 +54,22 @@ BasicParser::BasicParser()
 	_expr = expr0->expression(BinaryExpr::TREE_ID, _factor, _operators);
 
 	Parser* statement0 = Parser::rule();
+	statement0->retain();
+	statement0->setLock(true);
+
 	//block: "{" [statement] { (";" | EOL) [statement] } "}"
-	_block = Parser::rule(BlockStmnt::TREE_ID)
-		->sep(1, "{")->option(statement0)
+	_block = Parser::rule(BlockStmnt::TREE_ID);
+	_block->retain();
+	_block->setLock(true);
+
+	_block->sep(1, "{")->option(statement0)
 		->repeat(Parser::rule()->sep(2, ";", Token::TOKEN_EOL)->option(statement0))
 		->sep(1, "}");
 
 	//simple: expr
 	_simple = Parser::rule(PrimaryExpr::TREE_ID)->ast(_expr);
+	_simple->retain();
+	_simple->setLock(true);
 
 	/* statement: "if" expr block ["else" block]
 				  | "while" expr block
@@ -64,23 +82,25 @@ BasicParser::BasicParser()
 	);
 
 	//program: [statement] (";" | EOL)
-	_program = Parser::rule()->orTree(2, _statement, Parser::rule(NullStmnt::TREE_ID))->sep(2, ";", Token::TOKEN_EOL);
+	_program = Parser::rule();
 	_program->retain();
+	_program->setLock(true);
+	_program->orTree(2, _statement, Parser::rule(NullStmnt::TREE_ID))->sep(2, ";", Token::TOKEN_EOL);
 
 	this->init();
 }
 
 BasicParser::~BasicParser()
 {
-	_program->release();
-	_statement->release();
-	_simple->release();
-	_block->release();
-	_expr->release();
-	_factor->release();
-	_primary->release();
+	_program->release(true);
+	_statement->release(true);
+	_simple->release(true);
+	_block->release(true);
+	_expr->release(true);
+	_factor->release(true);
+	_primary->release(true);
 	//TODO:暂时会发生循环引用
-	_statement->release();
+	//_statement->release();
 
 	_operators->release();
 	delete _reserved;

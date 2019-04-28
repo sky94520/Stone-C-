@@ -16,31 +16,53 @@ FuncParser::FuncParser()
 	,_postfix(nullptr)
 {
 	//param: IDENTIFIER
-	_param = Parser::rule()->identifier(_reserved);
+	_param = Parser::rule();
+	_param->retain();
+	_param->setLock(true);
+	_param->identifier(_reserved);
+
 	//params: param {"," param}
-	_params = Parser::rule(ParameterList::TREE_ID)
-		->ast(_param)->repeat(Parser::rule()->sep(1, ",")->ast(_param));
+	_params = Parser::rule(ParameterList::TREE_ID);
+	_params->retain();
+	_params->setLock(true);
+	_params->ast(_param)->repeat(Parser::rule()->sep(1, ",")->ast(_param));
+
 	//param_list: "(" [params ] ")"
-	_paramList = Parser::rule()->sep(1, "(")->maybe(_params)->sep(1, ")");
+	_paramList = Parser::rule();
+	_paramList->retain();
+	_paramList->setLock(true);
+	_paramList->sep(1, "(")->maybe(_params)->sep(1, ")");
 
 	//def: "def" IDENTIFIER param_list block
-	_def = Parser::rule(DefStmnt::TREE_ID)
-		->sep(1, "def")->identifier(_reserved)->ast(_paramList)->ast(_block);
+	_def = Parser::rule(DefStmnt::TREE_ID);
+	_def->retain();
+	_def->setLock(true);
+	_def->sep(1, "def")->identifier(_reserved)->ast(_paramList)->ast(_block);
 
 	//----------------------º¯Êýµ÷ÓÃ----------------
 	//args: expr {"," expr}
-	_args = Parser::rule(Arguments::TREE_ID)
-		->ast(_expr)->repeat(Parser::rule()->sep(1, ",")->ast(_expr));
+	_args = Parser::rule(Arguments::TREE_ID);
+	_args->retain();
+	_args->setLock(true);
+	_args->ast(_expr)->repeat(Parser::rule()->sep(1, ",")->ast(_expr));
+
 	//postfix: "(" [args] ")"
-	_postfix = Parser::rule()->sep(1, "(")->maybe(_args)->sep(1, ")");
+	_postfix = Parser::rule();
 	_postfix->retain();
+	_postfix->setLock(true);
+	_postfix->sep(1, "(")->maybe(_args)->sep(1, ")");
 
 	this->init();
 }
 
 FuncParser::~FuncParser()
 {
-	_postfix->release();
+	_param->release(true);
+	_params->release(true);
+	_paramList->release(true);
+	_def->release(true);
+	_args->release(true);
+	_postfix->release(true);
 }
 
 bool FuncParser::init()
