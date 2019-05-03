@@ -28,6 +28,7 @@ class ParameterList;
 class DefStmnt;
 class ClosureStmnt;
 
+/*执行抽象语法树*/
 class EvalVisitor : public Visitor 
 {
 public:
@@ -68,6 +69,7 @@ public:
 
 	virtual void visit(ClosureStmnt* t, Environment* env);
 
+	//----------------数组相关-----------------
 	//数组
 	virtual void visit(ArrayLiteral* t, Environment* env);
 	virtual void visit(ArrayRef* t, Environment* env);

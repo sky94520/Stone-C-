@@ -1,3 +1,9 @@
+def hello(){
+	3;
+}
+
+hello();
+
 array = [1, 2, 3 + 4, "haha"];
 array[0] = 3;
 

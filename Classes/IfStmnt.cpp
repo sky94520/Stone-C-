@@ -14,10 +14,14 @@ IfStmnt::IfStmnt(const std::vector<ASTree*>& list)
 		if (t->getTreeID() == ASTList::TREE_ID)
 		{
 			ASTList* children = static_cast<ASTList*>(t);
-			_children.assign(children->begin(), children->end());
+
+			//Î²²åÈë
+			_children.insert(_children.end(), children->begin(), children->end());
 		}
 		else
+		{
 			_children.push_back(t);
+		}
 	}
 }
 

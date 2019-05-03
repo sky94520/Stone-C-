@@ -11,6 +11,7 @@ ASTList::ASTList()
 
 ASTList::ASTList(const std::vector<ASTree*>& list) 
 {
+	ASTree::init(TREE_ID);
 	for (auto it = list.begin(); it != list.end(); it++)
 	{
 		auto t = *it;

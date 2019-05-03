@@ -35,6 +35,7 @@ EvalVisitor::EvalVisitor()
 
 EvalVisitor::~EvalVisitor()
 {
+	//如果该变量为本对象所分配才需要释放
 	if (_allocated)
 	{
 		delete result;
@@ -43,14 +44,17 @@ EvalVisitor::~EvalVisitor()
 
 void EvalVisitor::visit(ASTree* t, Environment* env)
 {
+	throw StoneException("cannot eval: " + t->toString(), t);
 }
 
 void EvalVisitor::visit(ASTList* t, Environment* env)
 {
+	throw StoneException("cannot eval: " + t->toString(), t);
 }
 
 void EvalVisitor::visit(ASTLeaf* t, Environment* env)
 {
+	throw StoneException("cannot eval: " + t->toString(), t);
 }
 
 void EvalVisitor::visit(NumberLiteral* t, Environment* env)
