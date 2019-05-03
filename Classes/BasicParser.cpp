@@ -35,6 +35,7 @@ BasicParser::BasicParser()
 	_primary = Parser::rule(PrimaryExpr::TREE_ID);
 	_primary->retain();
 	_primary->setLock(true);
+
 	_primary->orTree(4, 
 		Parser::rule()->sep(1, "(")->ast(expr0)->sep(1, ")"),
 		Parser::rule()->number(NumberLiteral::TREE_ID),
@@ -45,6 +46,7 @@ BasicParser::BasicParser()
 	_factor = Parser::rule();
 	_factor->retain();
 	_factor->setLock(true);
+
 	_factor->orTree(2,
 		Parser::rule(NegativeExpr::TREE_ID)->sep(1, "-")->ast(_primary),
 		_primary);
@@ -74,6 +76,7 @@ BasicParser::BasicParser()
 				  | "while" expr block
 				  | simple
 	*/
+	//条件判断语句elif 在创建IfStmnt会对elif的数据项进行解包
 	_statement = statement0->orTree(3,
 		Parser::rule(IfStmnt::TREE_ID)
 			->sep(1, "if")->ast(_expr)->ast(_block)
@@ -88,6 +91,7 @@ BasicParser::BasicParser()
 	_program = Parser::rule();
 	_program->retain();
 	_program->setLock(true);
+
 	_program->orTree(2, _statement, Parser::rule(NullStmnt::TREE_ID))->sep(2, ";", Token::TOKEN_EOL);
 
 	this->init();

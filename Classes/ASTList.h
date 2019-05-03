@@ -9,7 +9,6 @@
 
 NS_STONE_BEGIN
 
-class ASTree;
 class Visitor;
 class Environment;
 

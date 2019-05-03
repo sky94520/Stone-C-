@@ -19,7 +19,8 @@ ASTList::ASTList(const std::vector<ASTree*>& list)
 	}
 }
 
-ASTList::~ASTList() {
+ASTList::~ASTList() 
+{
 	auto it = _children.begin();
 
 	while (it != _children.end())
@@ -57,6 +58,7 @@ std::string ASTList::getLocation() const
 	}
 	return str;
 }
+
 std::vector<ASTree*>::iterator ASTList::begin()
 {
 	return _children.begin();
