@@ -82,7 +82,8 @@ public:
 	void setResult(Value* value);
 private:
 	//------BinaryExpr----
-	Value computeOp(ASTree* t, const Value& left, const std::string& op, const Value& right);
+	void computeOp(BinaryExpr* binaryExpr, const std::string& op, Environment* env);
+	void computeAssign(BinaryExpr* binaryExpr, Environment* env);
 	//TODO: 暂时为整数
 	int computeNumber(ASTree* t, int left, const std::string& op, int right);
 

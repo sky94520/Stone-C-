@@ -16,3 +16,8 @@ if (array[0] == 1){
 }else {
 	print("°¡¹þ");
 }
+
+index = 0;
+while index < 3{
+	index = index + 1;
+}
